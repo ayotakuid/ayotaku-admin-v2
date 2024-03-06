@@ -1,66 +1,43 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Ayotaku Web Admin
+Ini adalah repository untuk Web Admin Ayotaku. untuk Tech Stack kita kali ini memakai Laravel dengan bantuan Vue dan Vue Router. Kegunaan dari Web ini adalah untuk mengatur Adding Anime, Manage User, Manage Notif, etc.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Versioning Language & Plugin
+* **PHP ^8.1**
+* **Laravel ^10.10**
+* **laravel-vite-plugin ^1.0.0 & @vitejs/plugin-vue ^5.0.4**
+* **Vite 5.0.0**
+* **Vue ^3.4.19**
+* **vue-router ^4.3.0**
 
-## About Laravel
+## Installation
+##### 1. Clone Repository
+```
+git clone git@github.com:ayotakuid/ayotaku-admin-v2.git
+```
+##### 2. Install Depedensi Composer
+```
+composer install
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+##### 3. Copy .env.example
+Copy file `.env.example` dan jadikan file tersebut menjadi `.env`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+##### 4. Key Generate
+```++
+php artisan key:generate
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+##### 5. Run serve
+```
+npm install
+npm run dev
+php artisan serve
+```
 
 ## Contributing
+Thanks for `Rezu0` dan `Adick Kevin Christiantio Nalle` sudah membantu dan mendevelop Web Admin ini. Dan jika ingin ikut dalam kontribusi di dalam pengembangan web ini silahkan hubungi salah satu dari kita.
+<pre><a href="https://github.com/Rezu0" target="_blank"><img src="https://avatars.githubusercontent.com/u/54113198?v=4" width="70px" alt="Rezu0"></a> Rezu0</pre>
+<pre><a href="https://github.com/ChrisNalle" target="_blank"><img src="https://avatars.githubusercontent.com/u/97382242?v=4" alt="Adick Kevin Christiantio Nalle" width="70px"></a> ChrisNalle</pre>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Project status
+Project ini dalam pengembangan awal, dan untuk kedepannya akan banyak sekali Commit yang akan di lakukan
