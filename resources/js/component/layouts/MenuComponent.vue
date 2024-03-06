@@ -1,3 +1,9 @@
+<script setup>
+  const receiveData = defineProps(['menuActivated']);
+</script>
+
+<template>
+  {{ receiveData.menuActivated }}
 <!--begin::sidebar menu-->
 <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
   <!--begin::Menu wrapper-->
@@ -20,7 +26,7 @@
                       </span>
                       <!--end::Svg Icon-->
                   </span>
-                  <a href=""><span class="menu-title">Menu Admin</span></a>
+                  <a href="/dashboard"><span class="menu-title">Dashboard Admin</span></a>
                   <span class="menu-arrow"></span>
               </span>
               <!--end:Menu link-->
@@ -28,13 +34,13 @@
               <div class="menu-sub menu-sub-accordion">
                   <!--begin:Menu item-->
                   <div class="menu-item">
-                    <a class="menu-link {{ ($active == 'activeDashboard') ? 'active' : '' }}" href="{{ route('index') }}">
+                    <a class="menu-link active" href="/dashboard">
                         <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                         </span>
                         <span class="menu-title">Dashboard Admin</span>
                     </a>
-                  </div>
+                </div>
                   <!--end:Menu item-->											
               </div>
               <!--end:Menu sub-->
@@ -44,7 +50,7 @@
           <div class="menu-item pt-5">
               <!--begin:Menu content-->
               <div class="menu-content">
-                  <span class="menu-heading fw-bold text-uppercase fs-7">Others Content</span>
+                  <span class="menu-heading fw-bold text-uppercase fs-7">Other Contents</span>
               </div>
               <!--end:Menu content-->
           </div>
@@ -52,7 +58,7 @@
           <!--begin:Menu item-->
           <div class="menu-item">
               <!--begin:Menu link-->
-              <a class="menu-link {{ ($active == 'activeAnime') ? 'active' : '' }}" href="{{ route('anime-index') }}">
+              <a class="menu-link active" href="/anime">
                   <span class="menu-icon">
                       <!--begin::Svg Icon | path: icons/duotune/abstract/abs014.svg-->
                       <span class="svg-icon svg-icon-2">
@@ -63,23 +69,23 @@
                       </span>
                       <!--end::Svg Icon-->
                   </span>
-                  <span class="menu-title">Anime</span>
+                  <span class="menu-title">Animes</span>
               </a>
               <!--end:Menu link-->
 
-            <!--begin:Menu link-->
-              <a class="menu-link" href="">
+             <!--begin:Menu link-->
+             <a class="menu-link" href="">
                 <span class="menu-icon">
                   <span class="svg-icon svg-icon-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path opacity="0.3" d="M11.8 5.2L17.7 8.6V15.4L11.8 18.8L5.90001 15.4V8.6L11.8 5.2ZM11.8 2C11.5 2 11.2 2.1 11 2.2L3.8 6.4C3.3 6.7 3 7.3 3 7.9V16.2C3 16.8 3.3 17.4 3.8 17.7L11 21.9C11.3 22 11.5 22.1 11.8 22.1C12.1 22.1 12.4 22 12.6 21.9L19.8 17.7C20.3 17.4 20.6 16.8 20.6 16.2V7.9C20.6 7.3 20.3 6.7 19.8 6.4L12.6 2.2C12.4 2.1 12.1 2 11.8 2Z" fill="currentColor" />
                         <path d="M11.8 8.69995L8.90001 10.3V13.7L11.8 15.3L14.7 13.7V10.3L11.8 8.69995Z" fill="currentColor" />
                     </svg>
-                </span>
+                  </span>
                 </span>
                 <span class="menu-title">Users</span>
               </a>
-            <!--end:Menu link-->
+              <!--end:Menu link-->
 
           </div>
           <!--end:Menu item-->																																										
@@ -89,3 +95,4 @@
   <!--end::Menu wrapper-->
 </div>
 <!--end::sidebar menu-->
+</template>

@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    @vite(['resources/js/app.js'])
-</head>
-<body>
-    <div id="app">
-        <example-component />
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Ayotaku Admin</title>
+      
+        {{-- Start CSS Metronic 8 --}}
+        <link rel="stylesheet" href="{{ asset('assets/plugins/global/css/plugins.bundle.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/global/css/style.bundle.css') }}">
+        {{-- End CSS Metronic 8 --}}
+      
+        {{-- Start Javascript Metronic 8 --}}
+        <script src="{{ asset('assets/plugins/global/js/plugins.bundle.js') }}"></script>
+        <script src="{{ asset('assets/plugins/global/js/scripts.bundle.js') }}"></script>
+        {{-- End Javascript Metronic 8 --}}
+      
+        <link rel="stylesheet" href="{{ asset('assets/plugins/global/css/select2.css') }}">
+      
+        @vite(['resources/js/app.js'])
+      </head>
+<body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+  <div id="app"></div>
 </body>
 </html>

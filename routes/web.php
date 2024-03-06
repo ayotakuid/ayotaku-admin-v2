@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\AnimeController;
-use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +12,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', [IndexController::class, 'indexPage'])->name('index');
-Route::get('/anime', [AnimeController::class, 'indexAnime'])->name('anime-index');
 
-Route::middleware(['auth'])->group(function () {
+Route::get('/', function () {
+    return view('welcome');
 });
+Route::get('/{any}', function () {
+  return view('welcome');
+})->where('any', '.*');
