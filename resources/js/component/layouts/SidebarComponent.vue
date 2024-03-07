@@ -1,6 +1,6 @@
 <script setup>
   import { ref, watch } from 'vue';
-  import logo from '../../../../public/assets/media/logos/custom-1.png';
+  import logo from '../../../../public/assets/media/ayotaku/Only Text.png';
   import MenuComponent from './MenuComponent.vue';
 
   const props = defineProps(['menuActivated']);

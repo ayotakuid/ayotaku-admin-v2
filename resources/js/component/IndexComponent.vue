@@ -2,6 +2,7 @@
   import { ref } from 'vue';
   import SidebarComponent from './layouts/SidebarComponent.vue';
   import ContentComponent from './layouts/ContentComponent.vue';
+  import LoginComponent from './auth/LoginComponent.vue';
 
   const getStateLogin = localStorage.getItem('stateLogin');
   const textTitle = ref(null);
@@ -117,7 +118,7 @@
     </div>
 
     <div v-else>
-      pengguna belom login
+      <LoginComponent />
     </div>
   </div>
 
