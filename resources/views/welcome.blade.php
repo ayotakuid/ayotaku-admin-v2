@@ -15,6 +15,12 @@
         <script src="{{ asset('assets/plugins/global/js/plugins.bundle.js') }}"></script>
         <script src="{{ asset('assets/plugins/global/js/scripts.bundle.js') }}"></script>
         {{-- End Javascript Metronic 8 --}}
+
+        {{-- FONT GOOGLE NUNITO --}}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+        {{-- END FONT GOOGLE NUNITO --}}
       
         <link rel="stylesheet" href="{{ asset('assets/plugins/global/css/select2.css') }}">
       

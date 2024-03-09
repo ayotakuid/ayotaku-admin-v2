@@ -1,5 +1,6 @@
 <script setup>
   import LogoMyanimelist from '../../../../public/assets/media/ayotaku/Tulisan MyAnimeList.png';
+  import LogoLoginButton from '../../../../public/assets/media/icons/ayotaku/Icon MAL.svg';
 </script>
 
 <template>
@@ -20,7 +21,9 @@
                         <div class="text-center"> <!-- Untuk mengatur agar konten berada di tengah -->
                           <img :src="LogoMyanimelist" alt="Logo Myanimelist" class="logo-myanime">
                           <div class="login">
-                            <button class="btn btn-primary btn-sm">Login</button>
+                            <button class="button-login">
+                              <img :src="LogoLoginButton" alt="Icon Button Login" class="img-button-login rounded-circle"> Login
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -44,6 +47,10 @@
     padding: 0;
     background-color: #2F303E;
     position: fixed;
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
   }
 
   .content-div {
@@ -70,7 +77,7 @@
   }
 
   .logo-myanime {
-    width: 60%;
+    width: 80%;
     transition: 0.5s;
   }
 
@@ -79,6 +86,34 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+  }
+
+  .button-login {
+    background-color: #4a4f6a;
+    color: white;
+    border: 1px solid #ffffff;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: larger;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+  }
+
+  .img-button-login {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border: 1px solid #ffffff;
+  }
+
+  @media (max-width: 1400px) {
+    #right-box-login {
+      min-height: 80vh;
+      border-radius: 20px;
+      display: inline;
+    }
   }
 
 
@@ -90,11 +125,17 @@
     }
 
     #right-box-login {
-      min-height: 20vh;
+      min-height: 40vh;
     }
 
     .logo-myanime {
       width: 50%;
+    }
+
+    @media (max-width: 450px) {
+      #right-box-login {
+        min-height: 30vh;
+      }
     }
   }
 </style>
