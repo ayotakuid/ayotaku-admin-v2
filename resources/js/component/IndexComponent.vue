@@ -15,9 +15,13 @@
 
   onMounted(() => {
     window.addEventListener('storage', updateStateLogin);
-  });
+  })
+  
+  onUnmounted(() => {
+    window.removeEventListener('storage', updateStateLogin);
+  })
 
-  const emit = defineEmits(['parents']);
+  const emit = defineEmits(['parents', 'stateLogin']);
 
   const handlerData = (data) => {
     textTitle.value = {
@@ -27,17 +31,24 @@
   }
 
   const handlerSignout = () => {
-    localStorage.removeItem('stateLogin');
     Swal.fire("Berhasil signout!");
     setTimeout(() => {
+      localStorage.setItem('stateLogin', 'false');
+      getStateLogin.value = localStorage.getItem('stateLogin');
       router.push('/');
-    }, 1000);
+    }, 2000);
+  }
+
+  const handlerStateLogin = (data) => {
+    setTimeout(() => {
+      getStateLogin.value = data;
+    }, 2000)
   }
 </script>
 
 <template>
   <div>
-    <div v-if="getStateLogin">
+    <div v-if="getStateLogin === 'true'">
       <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
       <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
@@ -136,7 +147,7 @@
     </div>
 
     <div v-else>
-      <LoginComponent />
+      <LoginComponent @stateLogin="handlerStateLogin"/>
     </div>
   </div>
 

@@ -1,6 +1,25 @@
 <script setup>
+  import { useRouter } from 'vue-router';
   import LogoMyanimelist from '../../../../public/assets/media/ayotaku/Tulisan MyAnimeList.png';
   import LogoLoginButton from '../../../../public/assets/media/icons/ayotaku/Icon MAL.svg';
+  import { onMounted, onUnmounted, ref } from 'vue';
+
+  const router = useRouter();
+  const getStateLogin = ref();
+  const emit = defineEmits(['stateLogin']);
+
+  const handlerLogin = () => {
+    Swal.fire("Berhasil login!");
+    setTimeout(() => {
+      localStorage.setItem('stateLogin', 'true');
+      getStateLogin.value = localStorage.getItem('stateLogin')
+      console.log(getStateLogin.value);
+      emit('stateLogin', getStateLogin.value);
+      router.push('/')
+    })
+  }
+
+  
 </script>
 
 <template>
@@ -21,7 +40,7 @@
                         <div class="text-center"> <!-- Untuk mengatur agar konten berada di tengah -->
                           <img :src="LogoMyanimelist" alt="Logo Myanimelist" class="logo-myanime">
                           <div class="login">
-                            <button class="button-login">
+                            <button class="button-login" @click="handlerLogin">
                               <img :src="LogoLoginButton" alt="Icon Button Login" class="img-button-login rounded-circle"> Login
                             </button>
                           </div>
@@ -92,6 +111,7 @@
     background-color: #4a4f6a;
     color: white;
     border: 1px solid #ffffff;
+    box-shadow: 5px 5px 15px black;
     border-radius: 25px;
     padding: 10px 20px;
     font-size: larger;
@@ -99,6 +119,12 @@
     align-items: center;
     justify-content: center;
     width: 150px;
+    transition: 0.5s;
+  }
+
+  .button-login:hover {
+    background-color: #2c3250;
+    box-shadow: 2px 2px 10px black;
   }
 
   .img-button-login {
