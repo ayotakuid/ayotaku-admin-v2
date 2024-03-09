@@ -4,7 +4,7 @@
   const contentText = ref('Ini adalah Dashboard');
   const data = [
     {
-      name: 'dashboard page',
+      name: 'dashboard-page',
       text: 'Dashboard Page',
     },
   ];

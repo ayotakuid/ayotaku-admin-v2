@@ -1,9 +1,15 @@
 <script setup>
-  const receiveData = defineProps(['menuActivated']);
+import { ref, watch } from 'vue';
+
+  const receiveData = defineProps(['textMenu']);
+  const active = ref('');
+
+  watch(() => receiveData.textMenu, (newValue) => {
+    active.value = newValue?.textTitle ?? ''
+  })
 </script>
 
 <template>
-  {{ receiveData.menuActivated }}
 <!--begin::sidebar menu-->
 <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
   <!--begin::Menu wrapper-->
@@ -34,7 +40,7 @@
               <div class="menu-sub menu-sub-accordion">
                   <!--begin:Menu item-->
                   <div class="menu-item">
-                    <a class="menu-link active" href="/dashboard">
+                    <a class="menu-link" :class="{ 'active': active?.name === 'dashboard-page' }" href="/dashboard">
                         <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                         </span>
@@ -58,7 +64,7 @@
           <!--begin:Menu item-->
           <div class="menu-item">
               <!--begin:Menu link-->
-              <a class="menu-link active" href="/anime">
+              <a class="menu-link" :class="{ 'active': active?.name === 'anime-page' }" href="/anime">
                   <span class="menu-icon">
                       <!--begin::Svg Icon | path: icons/duotune/abstract/abs014.svg-->
                       <span class="svg-icon svg-icon-2">

@@ -4,7 +4,7 @@
   const contentText = ref('Ini adalah page Animes');
   const data = [
     {
-      name: 'anime page',
+      name: 'anime-page',
       text: 'Anime Page',
     },
   ];

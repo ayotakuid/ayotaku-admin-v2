@@ -1,11 +1,21 @@
 <script setup>
-  import { ref } from 'vue';
+  import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
   import SidebarComponent from './layouts/SidebarComponent.vue';
   import ContentComponent from './layouts/ContentComponent.vue';
   import LoginComponent from './auth/LoginComponent.vue';
+  import { useRouter } from 'vue-router';
 
-  const getStateLogin = localStorage.getItem('stateLogin');
+  const getStateLogin = ref(localStorage.getItem('stateLogin'));
   const textTitle = ref(null);
+  const router = useRouter()
+
+  const updateStateLogin = () => {
+    getStateLogin.value = localStorage.getItem('stateLogin');
+  }
+
+  onMounted(() => {
+    window.addEventListener('storage', updateStateLogin);
+  });
 
   const emit = defineEmits(['parents']);
 
@@ -14,6 +24,14 @@
       textTitle: data
     };
     emit('parents', textTitle.value);
+  }
+
+  const handlerSignout = () => {
+    localStorage.removeItem('stateLogin');
+    Swal.fire("Berhasil signout!");
+    setTimeout(() => {
+      router.push('/');
+    }, 1000);
   }
 </script>
 
@@ -88,7 +106,7 @@
                       <!--end::Menu separator-->
                       <!--begin::Menu item-->
                       <div class="menu-item px-5">
-                        <a href="" class="menu-link px-5">Sign Out</a>
+                        <a class="menu-link px-5" @click="handlerSignout">Sign Out</a>
                       </div>
                       <!--end::Menu item-->
     

@@ -11,7 +11,7 @@
 
   const handlerData = (data) => {
     dataChild.value = data;
-    textTitle.value = dataChild.value[0].text
+    textTitle.value = dataChild.value[0]
     emit('parents', textTitle);
   }
   
@@ -29,12 +29,12 @@
                 <!--begin::Page title-->
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                     <!--begin::Title-->
-                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">{{ textTitle }}</h1>
+                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">{{ textTitle?.text }}</h1>
                     <!--end::Title-->
 
                     <!--begin::Breadcrumb-->
                     <ol class="breadcrumb breadcrumb-dot text-muted fs-6 fw-semibold">
-                        <li class="breadcrumb-item pe-3">{{ textTitle }}</li>
+                        <li class="breadcrumb-item pe-3">{{ textTitle?.text }}</li>
                     </ol>
                     <!--end::Breadcrumb-->
                     
