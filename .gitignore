@@ -17,5 +17,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-config.json
+/resources/utils/config.json
 .gitignore

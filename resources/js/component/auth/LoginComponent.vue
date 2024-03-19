@@ -3,11 +3,6 @@
   import axios from 'axios';
   import { ref, watchEffect } from 'vue';
   import {
-    MAL_URI_TOKEN,
-    MAL_CLIENT_ID,
-    CLIENT_SECRET,
-    CODE_VERIFIER,
-    GRANT_TYPE,
     API_CALLBACK
   } from '../../../utils/config.json';
   import LogoMyanimelist from '../../../../public/assets/media/ayotaku/Tulisan MyAnimeList.png';
@@ -33,7 +28,7 @@
         redirect: "follow",
       };
 
-      fetch('http://localhost:9001/api/admin/callback', requestOption)
+      fetch(API_CALLBACK, requestOption)
         .then((response) => response.json())
         .then((result) => {
           setTimeout(() => {
