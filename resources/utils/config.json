@@ -1,8 +1,0 @@
-{
-  "MAL_URI_TOKEN": "https://myanimelist.net/v1/oauth2/token",
-  "MAL_CLIENT_ID": "25d5416a5c1add91039197853644012d",
-  "CLIENT_SECRET": "77548c2aa3d3cd9c2e8e16d2b0494611fcec2d0a5ea10bf07f9a5e2fd8735cb8",
-  "CODE_VERIFIER": "1Ne8bk3L7BEw7Kr02-NxUuxqIOZjKJ61eDtZo03AD1Ptc9dXdOgpNXZeTUFhBllZJUlCJ8yEVv6TZaxEhxKUiVOJ2fwIq5JLAUug1TYP2LRIBkQ4o_VufaNL2uBAlKLF",
-  "GRANT_TYPE": "authorization_code",
-  "API_CALLBACK": "http://localhost:9001/api/admin/callback"
-}
