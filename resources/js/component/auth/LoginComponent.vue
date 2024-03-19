@@ -1,25 +1,56 @@
 <script setup>
   import { useRouter } from 'vue-router';
+  import axios from 'axios';
+  import { ref, watchEffect } from 'vue';
+  import {
+    MAL_URI_TOKEN,
+    MAL_CLIENT_ID,
+    CLIENT_SECRET,
+    CODE_VERIFIER,
+    GRANT_TYPE,
+    API_CALLBACK
+  } from '../../../utils/config.json';
   import LogoMyanimelist from '../../../../public/assets/media/ayotaku/Tulisan MyAnimeList.png';
   import LogoLoginButton from '../../../../public/assets/media/icons/ayotaku/Icon MAL.svg';
-  import { onMounted, onUnmounted, ref } from 'vue';
 
   const router = useRouter();
   const getStateLogin = ref();
   const emit = defineEmits(['stateLogin']);
-
-  const handlerLogin = () => {
-    Swal.fire("Berhasil login!");
-    setTimeout(() => {
-      localStorage.setItem('stateLogin', 'true');
-      getStateLogin.value = localStorage.getItem('stateLogin')
-      console.log(getStateLogin.value);
-      emit('stateLogin', getStateLogin.value);
-      router.push('/')
-    })
-  }
-
   
+  watchEffect(async () => {
+    const { code } = router.currentRoute.value.query;
+    if (code) {
+      const headersFetch = new Headers();
+      headersFetch.append("Content-Type", "application/json");
+
+      const data = JSON.stringify({
+        "code": code,
+      });
+      const requestOption = {
+        method: 'POST',
+        headers: headersFetch,
+        body: data,
+        redirect: "follow",
+      };
+
+      fetch('http://localhost:9001/api/admin/callback', requestOption)
+        .then((response) => response.json())
+        .then((result) => {
+          setTimeout(() => {
+            const parse = JSON.stringify({
+              id: result.responseData.users.id,
+              name: result.responseData.users.name,
+            })
+            localStorage.setItem('infoLogin', parse)
+            localStorage.setItem('stateLogin', 'true');
+            getStateLogin.value = localStorage.getItem('stateLogin');
+            emit('stateLogin', getStateLogin.value)
+            router.push('/')
+          }, 500)
+        })
+        .catch((err) => console.error(err))
+    }
+  });
 </script>
 
 <template>
@@ -40,9 +71,9 @@
                         <div class="text-center"> <!-- Untuk mengatur agar konten berada di tengah -->
                           <img :src="LogoMyanimelist" alt="Logo Myanimelist" class="logo-myanime">
                           <div class="login">
-                            <button class="button-login" @click="handlerLogin">
+                            <a class="button-login" href="https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=25d5416a5c1add91039197853644012d&code_challenge=1Ne8bk3L7BEw7Kr02-NxUuxqIOZjKJ61eDtZo03AD1Ptc9dXdOgpNXZeTUFhBllZJUlCJ8yEVv6TZaxEhxKUiVOJ2fwIq5JLAUug1TYP2LRIBkQ4o_VufaNL2uBAlKLF">
                               <img :src="LogoLoginButton" alt="Icon Button Login" class="img-button-login rounded-circle"> Login
-                            </button>
+                            </a>
                           </div>
                         </div>
                       </div>
@@ -120,6 +151,7 @@
     justify-content: center;
     width: 150px;
     transition: 0.5s;
+    cursor: pointer;
   }
 
   .button-login:hover {
