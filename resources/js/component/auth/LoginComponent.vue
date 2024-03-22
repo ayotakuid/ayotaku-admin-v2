@@ -1,12 +1,9 @@
 <script setup>
   import { useRouter } from 'vue-router';
-  import axios from 'axios';
   import { ref, watchEffect } from 'vue';
-  import {
-    API_CALLBACK
-  } from '../../../utils/config.json';
   import LogoMyanimelist from '../../../../public/assets/media/ayotaku/Tulisan MyAnimeList.png';
   import LogoLoginButton from '../../../../public/assets/media/icons/ayotaku/Icon MAL.svg';
+  import { toast } from 'vue-sonner';
 
   const router = useRouter();
   const getStateLogin = ref();
@@ -14,6 +11,8 @@
   
   watchEffect(async () => {
     const { code } = router.currentRoute.value.query;
+    const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
+
     if (code) {
       const headersFetch = new Headers();
       headersFetch.append("Content-Type", "application/json");
@@ -28,20 +27,38 @@
         redirect: "follow",
       };
 
-      fetch(API_CALLBACK, requestOption)
+      fetch('http://localhost:9001/api/admin/callback', requestOption)
         .then((response) => response.json())
         .then((result) => {
+          toast.promise(promise, {
+            loading: 'Loading...',
+            success: 'Berhasil login dengan Myanimelist',
+            duration: 2000
+          });
+
           setTimeout(() => {
-            const parse = JSON.stringify({
-              id: result.responseData.users.id,
-              name: result.responseData.users.name,
+            toast.promise(promise, {
+              loading: 'Please wait',
+              success: (data) => {
+                return 'Berhasil di redirect!'
+              },
+              duration: 3000
             })
+            const parse = JSON.stringify({
+              id: result.responseData?.id_mal,
+              name: result.responseData?.name_mal,
+            })
+            console.log(result.responseData);
             localStorage.setItem('infoLogin', parse)
             localStorage.setItem('stateLogin', 'true');
             getStateLogin.value = localStorage.getItem('stateLogin');
             emit('stateLogin', getStateLogin.value)
-            router.push('/')
-          }, 500)
+            router.push('/').then(() => {
+              setTimeout(() => {
+                location.reload();
+              }, 2000)
+            })
+          }, 2500)
         })
         .catch((err) => console.error(err))
     }

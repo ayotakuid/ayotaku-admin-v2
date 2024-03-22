@@ -21,7 +21,7 @@ const routes = [
     meta: {
       requiresAuth: true
     }
-  }
+  },
 ];
 
 export default routes;

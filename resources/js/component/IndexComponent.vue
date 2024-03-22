@@ -1,13 +1,25 @@
 <script setup>
-  import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
+  import { onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
   import SidebarComponent from './layouts/SidebarComponent.vue';
   import ContentComponent from './layouts/ContentComponent.vue';
   import LoginComponent from './auth/LoginComponent.vue';
   import { useRouter } from 'vue-router';
+  import { toast, Toaster } from 'vue-sonner';
 
   const getStateLogin = ref(localStorage.getItem('stateLogin'));
   const textTitle = ref(null);
   const router = useRouter()
+  const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
+  const stateInfo = reactive({
+    image: null,
+    nameMAL: null,
+    role: null
+  });
+  const infoLocal = localStorage.getItem('infoLogin');
+
+  // watchEffect(() => {
+    
+  // })
 
   const updateStateLogin = () => {
     getStateLogin.value = localStorage.getItem('stateLogin');
@@ -31,9 +43,17 @@
   }
 
   const handlerSignout = () => {
-    Swal.fire("Berhasil signout!");
+    toast.promise(promise, {
+      loading: 'Please wait!',
+      success: (data) => {
+        return 'Berhasil signout!'
+      },
+      duration: 2000
+    });
+
     setTimeout(() => {
       localStorage.setItem('stateLogin', 'false');
+      localStorage.removeItem('infoLogin');
       getStateLogin.value = localStorage.getItem('stateLogin');
       router.push('/');
     }, 2000);
@@ -149,6 +169,12 @@
     <div v-else>
       <LoginComponent @stateLogin="handlerStateLogin"/>
     </div>
+    
+    <Toaster 
+        position="top-right"
+        :expand="false"
+        theme="dark" 
+      />
   </div>
 
 </template>
