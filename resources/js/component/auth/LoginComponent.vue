@@ -7,6 +7,7 @@
 
   const router = useRouter();
   const getStateLogin = ref();
+  const loadingButton = ref(false);
   const emit = defineEmits(['stateLogin']);
   
   watchEffect(async () => {
@@ -14,6 +15,8 @@
     const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
 
     if (code) {
+      loadingButton.value = true;
+
       const headersFetch = new Headers();
       headersFetch.append("Content-Type", "application/json");
 
@@ -63,6 +66,10 @@
         .catch((err) => console.error(err))
     }
   });
+
+  const handlerClickButton = () => {
+    loadingButton.value = true
+  }
 </script>
 
 <template>
@@ -83,7 +90,7 @@
                         <div class="text-center"> <!-- Untuk mengatur agar konten berada di tengah -->
                           <img :src="LogoMyanimelist" alt="Logo Myanimelist" class="logo-myanime">
                           <div class="login">
-                            <a class="button-login" href="https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=25d5416a5c1add91039197853644012d&code_challenge=1Ne8bk3L7BEw7Kr02-NxUuxqIOZjKJ61eDtZo03AD1Ptc9dXdOgpNXZeTUFhBllZJUlCJ8yEVv6TZaxEhxKUiVOJ2fwIq5JLAUug1TYP2LRIBkQ4o_VufaNL2uBAlKLF">
+                            <a class="button-login" :class="{ 'disable-button-login': loadingButton }" href="https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=25d5416a5c1add91039197853644012d&code_challenge=1Ne8bk3L7BEw7Kr02-NxUuxqIOZjKJ61eDtZo03AD1Ptc9dXdOgpNXZeTUFhBllZJUlCJ8yEVv6TZaxEhxKUiVOJ2fwIq5JLAUug1TYP2LRIBkQ4o_VufaNL2uBAlKLF" @click="handlerClickButton">
                               <img :src="LogoLoginButton" alt="Icon Button Login" class="img-button-login rounded-circle"> Login
                             </a>
                           </div>
@@ -169,6 +176,11 @@
   .button-login:hover {
     background-color: #2c3250;
     box-shadow: 2px 2px 10px black;
+  }
+
+  .disable-button-login {
+    pointer-events: none;
+    cursor: default;
   }
 
   .img-button-login {
