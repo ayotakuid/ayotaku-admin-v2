@@ -1,9 +1,10 @@
 <script setup>
   import { useRouter } from 'vue-router';
   import { ref, watchEffect } from 'vue';
+  import { toast } from 'vue-sonner';
   import LogoMyanimelist from '../../../../public/assets/media/ayotaku/Tulisan MyAnimeList.png';
   import LogoLoginButton from '../../../../public/assets/media/icons/ayotaku/Icon MAL.svg';
-  import { toast } from 'vue-sonner';
+  import Cookies from '../../utils/handler-cookies';
 
   const router = useRouter();
   const getStateLogin = ref();
@@ -38,6 +39,9 @@
             success: 'Berhasil login dengan Myanimelist',
             duration: 2000
           });
+
+          Cookies.setCookies('tokenAyotaku', result.responseData?.tokenAyotaku);
+          Cookies.setCookies('tokenMAL', result.responseData?.token_mal);
 
           setTimeout(() => {
             toast.promise(promise, {

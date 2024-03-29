@@ -1,10 +1,12 @@
 <script setup>
   import { onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { toast, Toaster } from 'vue-sonner';
   import SidebarComponent from './layouts/SidebarComponent.vue';
   import ContentComponent from './layouts/ContentComponent.vue';
   import LoginComponent from './auth/LoginComponent.vue';
-  import { useRouter } from 'vue-router';
-  import { toast, Toaster } from 'vue-sonner';
+  import Cookies from '../utils/handler-cookies';
+  import Fetching from '../utils/handler-fetching';
 
   const getStateLogin = ref(localStorage.getItem('stateLogin'));
   const textTitle = ref(null);
@@ -17,9 +19,32 @@
   });
   const infoLocal = localStorage.getItem('infoLogin');
 
-  // watchEffect(() => {
-    
-  // })
+  watchEffect(async () => {
+    const { code } = router.currentRoute.value.query;
+
+    if (!code) {
+      const tokenCookies = Cookies.getCookies('tokenAyotaku');
+
+      if (tokenCookies) {
+        const responseChecking = await Fetching.checkingToken(tokenCookies);
+        if (responseChecking.statusCode && responseChecking.statusCode === 401) {
+          toast.promise(promise, {
+            loading: 'Loading...',
+            error: responseChecking?.message,
+            duration: 1000
+          })
+  
+          setTimeout(() => {
+            getStateLogin.value = false
+            localStorage.setItem('stateLogin', 'false')
+            localStorage.removeItem('infoLogin');
+            Cookies.deleteCookies('tokenAyotaku');
+            Cookies.deleteCookies('tokenMAL');
+          }, 2000);
+        }
+      }
+    }
+  })
 
   const updateStateLogin = () => {
     getStateLogin.value = localStorage.getItem('stateLogin');
