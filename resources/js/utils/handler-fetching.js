@@ -20,6 +20,28 @@ const checkingToken = async (token) => {
   }
 }
 
+const handlerFetchingSignOut = async (token) => {
+  const headersSignOut = new Headers();
+  headersSignOut.append("Content-Type", "application/json");
+  headersSignOut.append('Authorization', `Bearer ${token}`);
+
+  const requestOptions = {
+    method: "POST",
+    headers: headersSignOut,
+    redirect: 'follow',
+  };
+
+  try {
+    const signout = await fetch(`${BASE_URL}/admin/signout`, requestOptions);
+    const result = await signout.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   checkingToken,
+  handlerFetchingSignOut
 };

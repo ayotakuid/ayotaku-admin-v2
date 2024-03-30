@@ -27,11 +27,11 @@
 
       if (tokenCookies) {
         const responseChecking = await Fetching.checkingToken(tokenCookies);
-        if (responseChecking.statusCode && responseChecking.statusCode === 401) {
+        if (responseChecking.statusCode || responseChecking.statusCode === 401 || responseChecking.status === 'fail') {
           toast.promise(promise, {
             loading: 'Loading...',
-            error: responseChecking?.message,
-            duration: 1000
+            success: responseChecking?.message,
+            duration: 2000
           })
   
           setTimeout(() => {
@@ -40,7 +40,7 @@
             localStorage.removeItem('infoLogin');
             Cookies.deleteCookies('tokenAyotaku');
             Cookies.deleteCookies('tokenMAL');
-          }, 2000);
+          }, 3000);
         }
       }
     }
@@ -67,21 +67,28 @@
     emit('parents', textTitle.value);
   }
 
-  const handlerSignout = () => {
-    toast.promise(promise, {
-      loading: 'Please wait!',
-      success: (data) => {
-        return 'Berhasil signout!'
-      },
-      duration: 2000
-    });
-
-    setTimeout(() => {
-      localStorage.setItem('stateLogin', 'false');
-      localStorage.removeItem('infoLogin');
-      getStateLogin.value = localStorage.getItem('stateLogin');
-      router.push('/');
-    }, 2000);
+  const handlerSignout = async () => {
+    const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
+    const fetchingUpdate = await Fetching.handlerFetchingSignOut(tokenAyotaku);
+    
+    if (fetchingUpdate.status === 'success') {
+      toast.promise(promise, {
+        loading: 'Please wait!',
+        success: (data) => {
+          return 'Berhasil signout!'
+        },
+        duration: 2000
+      });
+  
+      setTimeout(() => {
+        localStorage.setItem('stateLogin', 'false');
+        localStorage.removeItem('infoLogin');
+        Cookies.deleteCookies('tokenAyotaku');
+        Cookies.deleteCookies('tokenMAL');
+        getStateLogin.value = localStorage.getItem('stateLogin');
+        router.push('/');
+      }, 2000);
+    }
   }
 
   const handlerStateLogin = (data) => {
