@@ -41,7 +41,29 @@ const handlerFetchingSignOut = async (token) => {
   }
 }
 
+const handlerFetchingProfile = async (token) => {
+  const headersProfile = new Headers();
+  headersProfile.append("Content-Type", "application/json");
+  headersProfile.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headersProfile,
+    redirect: 'follow',
+  };
+
+  try {
+    const profile = await fetch(`${BASE_URL}/admin/profile`, requestOptions);
+    const result = await profile.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   checkingToken,
-  handlerFetchingSignOut
+  handlerFetchingSignOut,
+  handlerFetchingProfile,
 };

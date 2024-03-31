@@ -1,5 +1,5 @@
 <script setup>
-  import { onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
+  import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
   import { useRouter } from 'vue-router';
   import { toast, Toaster } from 'vue-sonner';
   import SidebarComponent from './layouts/SidebarComponent.vue';
@@ -7,24 +7,19 @@
   import LoginComponent from './auth/LoginComponent.vue';
   import Cookies from '../utils/handler-cookies';
   import Fetching from '../utils/handler-fetching';
+  import FormatDate from '../utils/handler-date';
 
   const getStateLogin = ref(localStorage.getItem('stateLogin'));
   const textTitle = ref(null);
   const router = useRouter()
+  const stateInfo = ref();
+  const tokenCookies = Cookies.getCookies('tokenAyotaku');
+  const { code } = router.currentRoute.value.query;
   const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
-  const stateInfo = reactive({
-    image: null,
-    nameMAL: null,
-    role: null
-  });
-  const infoLocal = localStorage.getItem('infoLogin');
 
+  // CHECKING TOKEN
   watchEffect(async () => {
-    const { code } = router.currentRoute.value.query;
-
     if (!code) {
-      const tokenCookies = Cookies.getCookies('tokenAyotaku');
-
       if (tokenCookies) {
         const responseChecking = await Fetching.checkingToken(tokenCookies);
         if (responseChecking.statusCode || responseChecking.statusCode === 401 || responseChecking.status === 'fail') {
@@ -34,7 +29,7 @@
             duration: 2000
           })
   
-          setTimeout(() => {
+          return setTimeout(() => {
             getStateLogin.value = false
             localStorage.setItem('stateLogin', 'false')
             localStorage.removeItem('infoLogin');
@@ -43,8 +38,43 @@
           }, 3000);
         }
       }
+
+      if (tokenCookies === undefined) {
+        return setTimeout(() => {
+          getStateLogin.value = false;
+          localStorage.setItem('stateLogin', 'false');
+          localStorage.removeItem('infoLogin');
+        }, 3000)
+      }
     }
   })
+
+  watchEffect(async () => {
+    try {
+      if (!code) {
+        if (tokenCookies) {
+          const responseProfile = await Fetching.handlerFetchingProfile(tokenCookies);
+          if (responseProfile.status === 'success') {
+            setTimeout(() => {
+              stateInfo.value = responseProfile.data
+            }, 2000)
+          }
+        }
+      }
+
+      if (tokenCookies === undefined) {
+       return setTimeout(() => {
+        getStateLogin.value = false;
+        localStorage.setItem('stateLogin', 'false');
+        localStorage.removeItem('infoLogin');
+       }, 2000) 
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+
+  });
 
   const updateStateLogin = () => {
     getStateLogin.value = localStorage.getItem('stateLogin');
@@ -136,7 +166,7 @@
                   <div class="app-navbar-item ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                     <!--begin::Menu wrapper-->
                     <div class="cursor-pointer symbol symbol-35px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                      <img src="https://ui-avatars.com/api/?name=Urusai-san" alt="user" />
+                      <img :src="stateInfo ? stateInfo.img_profile : `https://ui-avatars.com/api/?name=${stateInfo?.name_mal}`" alt="user" />
                     </div>
                     <!--begin::User account menu-->
                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -145,19 +175,22 @@
                         <div class="menu-content d-flex align-items-center px-3">
                           <!--begin::Avatar-->
                           <div class="symbol symbol-50px me-5">
-                            <img alt="Logo" src="https://ui-avatars.com/api/?name=Urusai-san" />
+                            <img alt="Logo" :src="stateInfo ? stateInfo?.img_profile : `https://ui-avatars.com/api/?name=${stateInfo?.name_mal}`" />
                           </div>
                           <!--end::Avatar-->
                           <!--begin::Username-->
                           <div class="d-flex flex-column">
                             <div class="fw-bold d-flex align-items-center fs-5">
-                              Urusai-san
-                              <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">
-                                admin
+                              {{ stateInfo?.name_mal }}
+                              <span class="badge badge-light-secondary fw-bold fs-8 px-2 py-1 ms-2 text-info">
+                                {{ stateInfo?.role }}
                               </span>
                             </div>
                             <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
-                              ayotakuid@gmail.com
+                              {{ FormatDate.formatDateOnline(stateInfo?.timeLogin) }}
+                              <span class="badge badge-light-warning fw-bold fs-8 px-2 py-1 ms-2 text-success">
+                                {{ stateInfo?.isLogin == true ? 'online' : '' }}
+                              </span>
                             </a>
                           </div>
                           <!--end::Username-->
@@ -189,7 +222,7 @@
           <!--begin::Wrapper-->
           <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
             <SidebarComponent :menuActivated="textTitle"/>
-    
+
             <ContentComponent @parents="handlerData" />
           </div>
           <!--end::Wrapper-->
