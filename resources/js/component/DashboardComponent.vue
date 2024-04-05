@@ -3,6 +3,7 @@
   import CountUp from 'vue-countup-v3';
   import Fetching from '../utils/handler-fetching';
   import Cookies from '../utils/handler-cookies';
+  import { toast } from 'vue-sonner';
 
   const tokenCookies = Cookies.getCookies('tokenAyotaku');
   const totalBox = ref([
@@ -53,16 +54,26 @@
     }
   })
 
+  const toastShow = (text, oldValue, newValue) => {
+    if (oldValue === newValue) {
+      return toast.error(`Total ${text} masih sama`);
+    }
+
+    return toast.success(`Total ${text} telah berubah`);
+  }
+
   const handlerClickRefresh = async (text) => {
     const idSelected = totalBox.value.find(item => item.id === text);
     if (idSelected) {
       const responseTotal = await Fetching.handlerFetchingTotal(tokenCookies);
       idSelected.startValue = idSelected.endValue
       if (idSelected.id === 'count_up_user') {
+        toastShow('User', idSelected.endValue, responseTotal?.data?.totalUser)
         idSelected.endValue = responseTotal?.data?.totalUser
       }
-
+      
       if (idSelected.id === 'count_up_online') {
+        toastShow('Online', idSelected.endValue, responseTotal?.data?.onlineUser)
         idSelected.endValue = responseTotal?.data?.onlineUser
       }
     }
@@ -167,6 +178,10 @@
               <router-link to="/anime" class="btn btn-primary btn-sm">
                 Go to Animes
               </router-link>
+            </div>
+
+            <div class="col-md-12 mt-5">
+              RENCANA AKAN DI BUAT DAFTAR SEMUA LOG DISINI DAN DI TAMPILKAN VIA TABLE ATAU PUN TEMPLATE SENDIRI NANTINYA
             </div>
           </div>
         </div>
