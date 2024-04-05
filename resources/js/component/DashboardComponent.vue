@@ -40,17 +40,31 @@
   onMounted(async () => {
     if (tokenCookies) {
       const responseTotal = await Fetching.handlerFetchingTotal(tokenCookies);
-      if (totalBox.value[0].id === 'count_up_user') {
-        totalBox.value[0].endValue = responseTotal?.data?.totalUser
-      }
+      totalBox.value.forEach((item) => {
+        if (item.id === 'count_up_user') {
+          item.endValue = responseTotal?.data?.totalUser;
+        }
+
+        if (item.id === 'count_up_online') {
+          item.endValue = responseTotal?.data?.onlineUser;
+        }
+      })
+
     }
   })
 
-  const handlerClickRefresh = (text) => {
+  const handlerClickRefresh = async (text) => {
     const idSelected = totalBox.value.find(item => item.id === text);
     if (idSelected) {
+      const responseTotal = await Fetching.handlerFetchingTotal(tokenCookies);
       idSelected.startValue = idSelected.endValue
-      idSelected.endValue = idSelected.startValue + 10
+      if (idSelected.id === 'count_up_user') {
+        idSelected.endValue = responseTotal?.data?.totalUser
+      }
+
+      if (idSelected.id === 'count_up_online') {
+        idSelected.endValue = responseTotal?.data?.onlineUser
+      }
     }
   }
 </script>
