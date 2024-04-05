@@ -1,7 +1,32 @@
 <script setup>
-  import { onMounted, ref } from 'vue';
-  import { toast } from 'vue-sonner';
+  import { onMounted, ref, watchEffect } from 'vue';
+  import CountUp from 'vue-countup-v3';
+  import Fetching from '../utils/handler-fetching';
+  import Cookies from '../utils/handler-cookies';
 
+  const tokenCookies = Cookies.getCookies('tokenAyotaku');
+  const totalBox = ref([
+    {
+      id: 'count_up_user',
+      startValue: 0,
+      endValue: 10
+    },
+    {
+      id: 'count_up_anime',
+      startValue: 0,
+      endValue: 10
+    },
+    {
+      id: 'count_up_episode',
+      startValue: 0,
+      endValue: 10
+    },
+    {
+      id: 'count_up_online',
+      startValue: 0,
+      endValue: 10
+    }
+  ])
   const contentText = ref('Ini adalah Dashboard');
   const data = [
     {
@@ -12,18 +37,22 @@
   const emit = defineEmits(['parents'])
   emit('parents', data);
 
-  const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
-
-  onMounted(() => {
-    const infoLogin = localStorage.getItem('infoLogin');
-    const parse = JSON.parse(infoLogin);
-    setTimeout(() => {
-      toast.promise(promise, {
-        loading: 'Loading...',
-        success: `Welcome back, ${parse.name}`
-      })
-    }, 1000)
+  onMounted(async () => {
+    if (tokenCookies) {
+      const responseTotal = await Fetching.handlerFetchingTotal(tokenCookies);
+      if (totalBox.value[0].id === 'count_up_user') {
+        totalBox.value[0].endValue = responseTotal?.data?.totalUser
+      }
+    }
   })
+
+  const handlerClickRefresh = (text) => {
+    const idSelected = totalBox.value.find(item => item.id === text);
+    if (idSelected) {
+      idSelected.startValue = idSelected.endValue
+      idSelected.endValue = idSelected.startValue + 10
+    }
+  }
 </script>
 <template>
   <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
@@ -36,10 +65,17 @@
               <div class="box-dashboard-counting">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="text-start">Total User</div>
-                  <div data-kt-countup="true" data-kt-countup-value="100" class="text-end">0</div>
+                  <count-up 
+                    :start-val="totalBox.find(item => item.id === 'count_up_user').startValue" 
+                    :end-val="totalBox.find(item => item.id === 'count_up_user').endValue" 
+                    :delay="1000" 
+                    class="text-end">
+                  </count-up>
                 </div>
                 <div class="text-end mt-3 mb-3">
-                  <button class="button-refresh rounded">
+                  <button 
+                    class="button-refresh rounded"
+                    @click="handlerClickRefresh('count_up_user')">
                     <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
                   </button>
                 </div>
@@ -50,10 +86,17 @@
               <div class="box-dashboard-counting">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="text-start">Total Anime</div>
-                  <div data-kt-countup="true" data-kt-countup-value="100" class="text-end">0</div>
+                  <count-up 
+                    :start-val="totalBox.find(item => item.id === 'count_up_anime').startValue" 
+                    :end-val="totalBox.find(item => item.id === 'count_up_anime').endValue" 
+                    :delay="1000" 
+                    class="text-end">
+                  </count-up>
                 </div>
                 <div class="text-end mt-3 mb-3">
-                  <button class="button-refresh rounded">
+                  <button 
+                    class="button-refresh rounded"
+                    @click="handlerClickRefresh('count_up_anime')">
                     <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
                   </button>
                 </div>
@@ -64,10 +107,17 @@
               <div class="box-dashboard-counting">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="text-start">Total Episode</div>
-                  <div data-kt-countup="true" data-kt-countup-value="100" class="text-end">0</div>
+                  <count-up 
+                    :start-val="totalBox.find(item => item.id === 'count_up_episode').startValue" 
+                    :end-val="totalBox.find(item => item.id === 'count_up_episode').endValue" 
+                    :delay="1000" 
+                    class="text-end">
+                  </count-up>
                 </div>
                 <div class="text-end mt-3 mb-3">
-                  <button class="button-refresh rounded">
+                  <button 
+                    class="button-refresh rounded"
+                    @click="handlerClickRefresh('count_up_episode')">
                     <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
                   </button>
                 </div>
@@ -78,10 +128,17 @@
               <div class="box-dashboard-counting">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="text-start">Total Online</div>
-                  <div data-kt-countup="true" data-kt-countup-value="100" class="text-end">0</div>
+                  <count-up 
+                    :start-val="totalBox.find(item => item.id === 'count_up_online').startValue" 
+                    :end-val="totalBox.find(item => item.id === 'count_up_online').endValue" 
+                    :delay="1000" 
+                    class="text-end">
+                  </count-up>
                 </div>
                 <div class="text-end mt-3 mb-3">
-                  <button class="button-refresh rounded">
+                  <button 
+                    class="button-refresh rounded"
+                    @click="handlerClickRefresh('count_up_online')">
                     <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
                   </button>
                 </div>

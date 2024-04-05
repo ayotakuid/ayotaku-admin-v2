@@ -62,8 +62,30 @@ const handlerFetchingProfile = async (token) => {
   }
 }
 
+const handlerFetchingTotal = async (token) => {
+  const headersTotal = new Headers();
+  headersTotal.append("Content-Type", "application/json");
+  headersTotal.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: headersTotal,
+    redirect: "follow",
+  };
+
+  try {
+    const total = await fetch(`${BASE_URL}/admin/total-all`, requestOptions);
+    const result = await total.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export default {
   checkingToken,
   handlerFetchingSignOut,
   handlerFetchingProfile,
+  handlerFetchingTotal,
 };
