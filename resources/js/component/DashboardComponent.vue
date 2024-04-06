@@ -1,11 +1,13 @@
 <script setup>
-  import { onMounted, ref, watchEffect } from 'vue';
+  import { computed, onMounted, ref, watchEffect } from 'vue';
+  import Paginate from 'vuejs-paginate-next';
   import CountUp from 'vue-countup-v3';
   import Fetching from '../utils/handler-fetching';
   import Cookies from '../utils/handler-cookies';
   import { toast } from 'vue-sonner';
 
   const tokenCookies = Cookies.getCookies('tokenAyotaku');
+  const pagePagination = ref(1);
   const totalBox = ref([
     {
       id: 'count_up_user',
@@ -38,6 +40,10 @@
   const emit = defineEmits(['parents'])
   emit('parents', data);
 
+  const items = ref(),
+        currentPage = ref(1),
+        perPage = 5;
+
   onMounted(async () => {
     if (tokenCookies) {
       const responseTotal = await Fetching.handlerFetchingTotal(tokenCookies);
@@ -50,7 +56,6 @@
           item.endValue = responseTotal?.data?.onlineUser;
         }
       })
-
     }
   })
 
@@ -77,6 +82,25 @@
         idSelected.endValue = responseTotal?.data?.onlineUser
       }
     }
+  }
+
+  const totalItems = computed(() => {
+    return Math.ceil(
+      items.value.filter((item) => JSON.stringify(item).toLowerCase().includes('1')).length / perPage
+    );
+  })
+
+  const displayItems = computed(() => {
+    const start = (currentPage.value - 1) * perPage;
+    const end = start + perPage;
+    return items.value.filter((item) => {
+      return JSON.stringify(item).toLowerCase().includes('1');
+    }).slice(start, end);
+  })
+
+  const handlerClickCallback = (pagenum) => {
+    currentPage.value = pagenum
+    console.log(pagenum);
   }
 </script>
 <template>
@@ -181,7 +205,24 @@
             </div>
 
             <div class="col-md-12 mt-5">
-              RENCANA AKAN DI BUAT DAFTAR SEMUA LOG DISINI DAN DI TAMPILKAN VIA TABLE ATAU PUN TEMPLATE SENDIRI NANTINYA
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <div>
+                    Halaman: {{ displayItems[0].name }}
+                    <div v-for="item in displayItems" :key="item.name">
+                      {{ item.name }}
+                    </div>
+                  </div>
+                  <div class="box-search-input">
+                    <paginate
+                      v-model="pagePagination"
+                      :page-count="totalItems"
+                      :click-handler="handlerClickCallback"
+                    >
+                    </paginate>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -220,6 +261,15 @@
 
 .button-refresh:hover .icon-rotate {
   animation: refresh 3s;
+}
+
+.box-search-input {
+  display: flex;
+  justify-content: end;
+}
+
+.page-item .page-link {
+  cursor: pointer;
 }
 
 @keyframes refresh {

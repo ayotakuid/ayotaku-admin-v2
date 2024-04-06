@@ -3,6 +3,7 @@ import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from './routes';
 import IndexComponent from './component/IndexComponent.vue';
+import Paginate from 'vuejs-paginate-next';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -28,5 +29,6 @@ router.beforeEach((to, from, next) => {
 
 const app = createApp(IndexComponent);
 app.use(router);
+app.use(Paginate);
 
 app.mount('#app');
