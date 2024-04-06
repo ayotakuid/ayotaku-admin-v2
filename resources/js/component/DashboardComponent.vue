@@ -8,6 +8,7 @@
 
   const tokenCookies = Cookies.getCookies('tokenAyotaku');
   const pagePagination = ref(1);
+  const querySearch = ref('');
   const totalBox = ref([
     {
       id: 'count_up_user',
@@ -40,9 +41,9 @@
   const emit = defineEmits(['parents'])
   emit('parents', data);
 
-  const items = ref(),
+  const items = ref([]),
         currentPage = ref(1),
-        perPage = 5;
+        perPage = 10;
 
   onMounted(async () => {
     if (tokenCookies) {
@@ -56,6 +57,9 @@
           item.endValue = responseTotal?.data?.onlineUser;
         }
       })
+
+      const responseLogs = await Fetching.handlerFetchingLogs(tokenCookies);
+      items.value = responseLogs?.data;
     }
   })
 
@@ -85,16 +89,18 @@
   }
 
   const totalItems = computed(() => {
+    const search = querySearch.value
     return Math.ceil(
-      items.value.filter((item) => JSON.stringify(item).toLowerCase().includes('1')).length / perPage
+      items.value.filter((item) => JSON.stringify(item).toLowerCase().includes(search.toLowerCase())).length / perPage
     );
   })
 
   const displayItems = computed(() => {
+    const search = querySearch.value
     const start = (currentPage.value - 1) * perPage;
     const end = start + perPage;
     return items.value.filter((item) => {
-      return JSON.stringify(item).toLowerCase().includes('1');
+      return JSON.stringify(item).toLowerCase().includes(search.toLowerCase());
     }).slice(start, end);
   })
 
@@ -195,25 +201,26 @@
             </div>
 
             <div class="col-md-12 mt-5">
-              {{ contentText }}
-            </div>
-
-            <div class="col-md-12">
-              <router-link to="/anime" class="btn btn-primary btn-sm">
-                Go to Animes
-              </router-link>
-            </div>
-
-            <div class="col-md-12 mt-5">
-              <div class="card shadow-sm">
+              <div class="card shadow-lg">
                 <div class="card-body">
-                  <div>
-                    Halaman: {{ displayItems[0].name }}
-                    <div v-for="item in displayItems" :key="item.name">
-                      {{ item.name }}
+                  <div class="px-5">
+                    <div class="box-input-search">
+                      <div class="input-group input-group-solid mb-5 width-input-box">
+                        <span class="input-group-text" id="search-logs">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Search..." v-model="querySearch">
+                      </div>
+                    </div>
+                    <div 
+                      v-for="item in displayItems" 
+                      :key="item.uuid"
+                      class="item-logs-paginate"
+                    >
+                      {{ item.text }}
                     </div>
                   </div>
-                  <div class="box-search-input">
+                  <div class="box-paginate">
                     <paginate
                       v-model="pagePagination"
                       :page-count="totalItems"
@@ -223,6 +230,16 @@
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div class="col-md-12 mt-5">
+              {{ contentText }}
+            </div>
+
+            <div class="col-md-12">
+              <router-link to="/anime" class="btn btn-primary btn-sm">
+                Go to Animes
+              </router-link>
             </div>
           </div>
         </div>
@@ -263,13 +280,37 @@
   animation: refresh 3s;
 }
 
-.box-search-input {
+.box-input-search {
   display: flex;
   justify-content: end;
+  margin: 0 0 15px 0;
+}
+
+.box-paginate {
+  display: flex;
+  justify-content: start;
+  margin: 20px 0;
 }
 
 .page-item .page-link {
   cursor: pointer;
+}
+
+.item-logs-paginate {
+  border: 1px solid #000000;
+  padding: 8px 10px;
+  border-radius: 7px;
+  margin: 5px 0;
+}
+
+.width-input-box{
+  width: 30%;
+}
+
+@media (max-width: 450px) {
+  .width-input-box{
+  width: 70%;
+}
 }
 
 @keyframes refresh {

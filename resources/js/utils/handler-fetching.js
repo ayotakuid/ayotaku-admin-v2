@@ -83,9 +83,31 @@ const handlerFetchingTotal = async (token) => {
   }
 };
 
+const handlerFetchingLogs = async (token) => {
+  const headersLogs = new Headers();
+  headersLogs.append("Content-Type", "application/json");
+  headersLogs.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: headersLogs,
+    redirect: "follow",
+  };
+
+  try {
+    const logsAll = await fetch(`${BASE_URL}/admin/logs`, requestOptions);
+    const result = await logsAll.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   checkingToken,
   handlerFetchingSignOut,
   handlerFetchingProfile,
   handlerFetchingTotal,
+  handlerFetchingLogs,
 };
