@@ -104,10 +104,31 @@ const handlerFetchingLogs = async (token) => {
   }
 }
 
+const handlerFethcingScheduleWeek = async () => {
+  const headersSchedule = new Headers();
+  headersSchedule.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: "GET",
+    headers: headersSchedule,
+    redirect: "follow",
+  };
+
+  try {
+    const scheduleWeek = await fetch(`${BASE_URL}/anime/schedule`, requestOptions);
+    const result = await scheduleWeek.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   checkingToken,
   handlerFetchingSignOut,
   handlerFetchingProfile,
   handlerFetchingTotal,
   handlerFetchingLogs,
+  handlerFethcingScheduleWeek
 };

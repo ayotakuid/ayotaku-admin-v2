@@ -1,10 +1,12 @@
 <script setup>
-  import { computed, onMounted, ref, watchEffect } from 'vue';
+  import { computed, onMounted, onUpdated, ref, watchEffect } from 'vue';
+  import { toast } from 'vue-sonner';
   import Paginate from 'vuejs-paginate-next';
   import CountUp from 'vue-countup-v3';
+  import ScheduleAnimeComponent from '../component/animes/ScheduleAnimeComponent.vue';
   import Fetching from '../utils/handler-fetching';
   import Cookies from '../utils/handler-cookies';
-  import { toast } from 'vue-sonner';
+  import FormatDate from '../utils/handler-date';
 
   const tokenCookies = Cookies.getCookies('tokenAyotaku');
   const pagePagination = ref(1);
@@ -43,7 +45,7 @@
 
   const items = ref([]),
         currentPage = ref(1),
-        perPage = 10;
+        perPage = 20;
 
   onMounted(async () => {
     if (tokenCookies) {
@@ -61,6 +63,12 @@
       const responseLogs = await Fetching.handlerFetchingLogs(tokenCookies);
       items.value = responseLogs?.data;
     }
+  })
+
+  // INI HARUS SELALU DI BAWA JIKA INGIN MENGGUNAKAN TOOLTIPS
+  onUpdated(() => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
   })
 
   const toastShow = (text, oldValue, newValue) => {
@@ -99,135 +107,194 @@
     const search = querySearch.value
     const start = (currentPage.value - 1) * perPage;
     const end = start + perPage;
-    return items.value.filter((item) => {
+    
+    const sortedItems = [...items.value].sort((a, b) => {
+      const dateA = new Date(a.date)
+      const dateB = new Date(b.date)
+      const now = new Date();
+  
+      const diffA = Math.abs(dateA - now)
+      const diffB = Math.abs(dateB - now)
+  
+      return diffA - diffB
+    })
+
+    return sortedItems.filter((item) => {
       return JSON.stringify(item).toLowerCase().includes(search.toLowerCase());
     }).slice(start, end);
   })
 
   const handlerClickCallback = (pagenum) => {
     currentPage.value = pagenum
-    console.log(pagenum);
   }
 </script>
 <template>
   <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
     <div class="card shadow-sm">
       <div class="card-body">
+
         <div class="container">
           <div class="row">
 
-            <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
-              <div class="box-dashboard-counting">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="text-start">Total User</div>
-                  <count-up 
-                    :start-val="totalBox.find(item => item.id === 'count_up_user').startValue" 
-                    :end-val="totalBox.find(item => item.id === 'count_up_user').endValue" 
-                    :delay="1000" 
-                    class="text-end">
-                  </count-up>
-                </div>
-                <div class="text-end mt-3 mb-3">
-                  <button 
-                    class="button-refresh rounded"
-                    @click="handlerClickRefresh('count_up_user')">
-                    <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <!-- LISTING TOTAL USER, ONLINE, ETC -->
+            <div class="card shadow-lg my-5">
+              <div class="card-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h3 class="text-decoration-underline my-5">
+                        Listing Total
+                      </h3>
+                    </div>
 
-            <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
-              <div class="box-dashboard-counting">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="text-start">Total Anime</div>
-                  <count-up 
-                    :start-val="totalBox.find(item => item.id === 'count_up_anime').startValue" 
-                    :end-val="totalBox.find(item => item.id === 'count_up_anime').endValue" 
-                    :delay="1000" 
-                    class="text-end">
-                  </count-up>
-                </div>
-                <div class="text-end mt-3 mb-3">
-                  <button 
-                    class="button-refresh rounded"
-                    @click="handlerClickRefresh('count_up_anime')">
-                    <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
-              <div class="box-dashboard-counting">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="text-start">Total Episode</div>
-                  <count-up 
-                    :start-val="totalBox.find(item => item.id === 'count_up_episode').startValue" 
-                    :end-val="totalBox.find(item => item.id === 'count_up_episode').endValue" 
-                    :delay="1000" 
-                    class="text-end">
-                  </count-up>
-                </div>
-                <div class="text-end mt-3 mb-3">
-                  <button 
-                    class="button-refresh rounded"
-                    @click="handlerClickRefresh('count_up_episode')">
-                    <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
-              <div class="box-dashboard-counting">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="text-start">Total Online</div>
-                  <count-up 
-                    :start-val="totalBox.find(item => item.id === 'count_up_online').startValue" 
-                    :end-val="totalBox.find(item => item.id === 'count_up_online').endValue" 
-                    :delay="1000" 
-                    class="text-end">
-                  </count-up>
-                </div>
-                <div class="text-end mt-3 mb-3">
-                  <button 
-                    class="button-refresh rounded"
-                    @click="handlerClickRefresh('count_up_online')">
-                    <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-12 mt-5">
-              <div class="card shadow-lg">
-                <div class="card-body">
-                  <div class="px-5">
-                    <div class="box-input-search">
-                      <div class="input-group input-group-solid mb-5 width-input-box">
-                        <span class="input-group-text" id="search-logs">
-                          <i class="fa-solid fa-magnifying-glass"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Search..." v-model="querySearch">
+                    <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
+                      <div class="box-dashboard-counting">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="text-start">Total User</div>
+                          <count-up 
+                            :start-val="totalBox.find(item => item.id === 'count_up_user').startValue" 
+                            :end-val="totalBox.find(item => item.id === 'count_up_user').endValue" 
+                            :delay="1000" 
+                            class="text-end">
+                          </count-up>
+                        </div>
+                        <div class="text-end mt-3 mb-3">
+                          <button 
+                            class="button-refresh rounded"
+                            @click="handlerClickRefresh('count_up_user')">
+                            <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <div 
-                      v-for="item in displayItems" 
-                      :key="item.uuid"
-                      class="item-logs-paginate"
-                    >
-                      {{ item.text }}
+        
+                    <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
+                      <div class="box-dashboard-counting">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="text-start">Total Anime</div>
+                          <count-up 
+                            :start-val="totalBox.find(item => item.id === 'count_up_anime').startValue" 
+                            :end-val="totalBox.find(item => item.id === 'count_up_anime').endValue" 
+                            :delay="1000" 
+                            class="text-end">
+                          </count-up>
+                        </div>
+                        <div class="text-end mt-3 mb-3">
+                          <button 
+                            class="button-refresh rounded"
+                            @click="handlerClickRefresh('count_up_anime')">
+                            <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+        
+                    <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
+                      <div class="box-dashboard-counting">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="text-start">Total Episode</div>
+                          <count-up 
+                            :start-val="totalBox.find(item => item.id === 'count_up_episode').startValue" 
+                            :end-val="totalBox.find(item => item.id === 'count_up_episode').endValue" 
+                            :delay="1000" 
+                            class="text-end">
+                          </count-up>
+                        </div>
+                        <div class="text-end mt-3 mb-3">
+                          <button 
+                            class="button-refresh rounded"
+                            @click="handlerClickRefresh('count_up_episode')">
+                            <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+        
+                    <div class="col-md-3 col-sm-6 col-xs-12 text-light mb-4">
+                      <div class="box-dashboard-counting">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="text-start">Total Online</div>
+                          <count-up 
+                            :start-val="totalBox.find(item => item.id === 'count_up_online').startValue" 
+                            :end-val="totalBox.find(item => item.id === 'count_up_online').endValue" 
+                            :delay="1000" 
+                            class="text-end">
+                          </count-up>
+                        </div>
+                        <div class="text-end mt-3 mb-3">
+                          <button 
+                            class="button-refresh rounded"
+                            @click="handlerClickRefresh('count_up_online')">
+                            <i class="fa-solid fa-arrows-rotate text-light icon-rotate"></i>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="box-paginate">
-                    <paginate
-                      v-model="pagePagination"
-                      :page-count="totalItems"
-                      :click-handler="handlerClickCallback"
-                    >
-                    </paginate>
+                </div>
+              </div>
+            </div>
+
+            <div class="card shadow-lg my-5">
+              <div class="card-body">
+                <div class="px-5">
+                  <div>
+                    <h3 class="text-decoration-underline">
+                      Schedule This Week!
+                    </h3>
+
+                    <ScheduleAnimeComponent />
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LISTING HISTORY LOGS -->
+            <div class="card shadow-lg my-5">
+              <div class="card-body">
+                <div class="px-5">
+                  <div class="d-flex justify-content-between">
+                    <div class="justify-content-start">
+                      <h3>
+                        <u>History Logs Sign Up & In</u>
+                      </h3>
+                    </div>
+                    <div class="justify-content-end">
+                      <div class="input-group input-group-solid mb-5 width-input-box">
+                          <span class="input-group-text" id="search-logs">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                          </span>
+                          <input type="text" class="form-control" placeholder="Search logs..." v-model="querySearch">
+                        </div>
+                    </div>
+                  </div>
+                  <div class="container">
+                    <div class="row">
+                      <div 
+                        class="col-md-4"
+                        v-for="item in displayItems"
+                        :key="item.uuid"
+                      >
+                        <div 
+                          class="item-logs-paginate shadow-sm"
+                          data-bs-toggle="tooltip" 
+                          data-bs-custom-class="tooltip-inverse" 
+                          data-bs-placement="left" 
+                          :title="FormatDate.formatDateOnline(item.date)"
+                        >
+                          {{ item.type === 'signup' ? `${item.text}. ( ${item.user.name_mal} )` : item.text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="box-paginate">
+                  <paginate
+                    v-model="pagePagination"
+                    :page-count="totalItems"
+                    :click-handler="handlerClickCallback"
+                  >
+                  </paginate>
                 </div>
               </div>
             </div>
@@ -250,11 +317,10 @@
 
 <style scoped>
 .box-dashboard-counting {
-  padding: 5px 15px;
+  padding: 10px;
   background-color: #2F303E;
   border-radius: 5px;
-  font-size: 18px;
-  box-shadow: 3px 5px 15px black;
+  font-size: 17px;
 }
 
 .text-end {
@@ -263,11 +329,11 @@
 }
 
 .button-refresh {
-  font-size: 12px;
+  font-size: 18px;
   border: none;
   outline: none;
   text-align: center;
-  padding: 5px 10px;
+  padding: 2px 10px;
   transition: 0.5s;
   background-color: #50CD89;
 }
@@ -292,19 +358,24 @@
   margin: 20px 0;
 }
 
-.page-item .page-link {
+.page-item .page-link:hover {
   cursor: pointer;
 }
 
 .item-logs-paginate {
-  border: 1px solid #000000;
-  padding: 8px 10px;
   border-radius: 7px;
-  margin: 5px 0;
+  padding: 15px 20px;
+  margin: 10px 0;
+  transition: 0.5s;
+  background-color: #e4e6ef;
+}
+
+.item-logs-paginate:hover {
+  background-color: #b3b4bc;
 }
 
 .width-input-box{
-  width: 30%;
+  width: 100%;
 }
 
 @media (max-width: 450px) {

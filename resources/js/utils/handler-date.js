@@ -17,6 +17,22 @@ const formatDateOnline = (ISODate) => {
   }
 }
 
+const formatDateSchedule = (ISODate) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZone: 'Asia/Jakarta'
+  }
+
+  const dateLocale = new Date(ISODate).toLocaleString('id-ID', options)
+
+  return `${dateLocale} WIB`;
+} 
+
 export default {
-  formatDateOnline
+  formatDateOnline,
+  formatDateSchedule
 }

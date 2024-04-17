@@ -29,6 +29,6 @@ router.beforeEach((to, from, next) => {
 
 const app = createApp(IndexComponent);
 app.use(router);
-app.use(Paginate);
+app.component(Paginate);
 
 app.mount('#app');

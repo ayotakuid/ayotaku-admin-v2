@@ -1,5 +1,5 @@
 <script setup>
-  import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
+  import { onMounted, onUnmounted, onUpdated, ref, watchEffect } from 'vue';
   import { useRouter } from 'vue-router';
   import { toast, Toaster } from 'vue-sonner';
   import SidebarComponent from './layouts/SidebarComponent.vue';
