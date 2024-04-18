@@ -1,19 +1,29 @@
 <script setup>
-  import { onMounted, onUpdated } from "vue";
+  import { ref, watch } from "vue";
+  import _ from "lodash";
 
-  // // Select2
-  // onMounted(() => {
-  //   $('.select-anime').select2({
-  //     allowClear: true
-  //   });
-  // })
+  const textSelect2 = ref('');
+  const indicatorLoading = ref(false)
+  const searchResult = ref('');
 
-  // // Select2
-  // onUpdated(() => {
-  //   $('.select-anime').select2({
-  //     allowClear: true
-  //   });
-  // })
+  // fungsi dari lodash untuk menunda execute function secara langsung
+  const searchAnimeMyanimelist = _.debounce(() => {
+    if (textSelect2.value.length < 5) {
+      searchResult.value = ''
+      return
+    }
+
+    indicatorLoading.value = true
+    setTimeout(() => {
+      indicatorLoading.value = false
+      searchResult.value = textSelect2.value
+    }, 2000) //delay 2 detik dari setTimeout
+
+  }, 1000) //delay 1 detik
+
+  watch(textSelect2, (newSelect2, oldSelect2) => {
+    searchAnimeMyanimelist();
+  });
 </script>
 
 <template>
@@ -26,21 +36,27 @@
               <h1>Search Anime from Myanimelist</h1>
             </div>
 
-            <div class="col-md-8 my-2">
-              <input type="text" class="form-control form-control-sm form-control-solid" placeholder="name@example.com"/>
-              <!-- <select
-                class="form-select form-select-sm form-select-solid select-anime"
-                data-control="select2"
-                data-placeholder="Select Anime"
-              >
-                <option></option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-              </select> -->
+            <div class="col-md-8 col-sm-12 my-2">
+              <input type="text" class="form-control form-control-solid" placeholder="Search anime..." v-model="textSelect2"/>
+              <span class="fw-semibold text-danger text-hover-primary fs-7 mx-2">
+                min 5 huruf
+              </span>
             </div>
 
-            <div class="col-md-4 button-checking">
-              <button class="btn btn-success btn-sm">Checking</button>
+            <div class="col-md-4 col-sm-12 button-checking">
+              <button class="btn btn-success btn-sm mx-2">Search</button>
+            </div>
+
+            <div class="col-md-12 my-5">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <div class="container">
+                    <div class="row">
+                      {{ indicatorLoading ? 'Loading...' : searchResult }}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="col-md-12 my-5">
@@ -62,6 +78,6 @@ div {
 }
 
 .button-checking {
-  margin-top: 6px;
+  margin-top: 11px;
 }
 </style>
