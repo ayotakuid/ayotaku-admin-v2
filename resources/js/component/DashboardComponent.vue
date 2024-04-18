@@ -33,7 +33,6 @@
       endValue: 10
     }
   ])
-  const contentText = ref('Ini adalah Dashboard');
   const data = [
     {
       name: 'dashboard-page',
@@ -297,16 +296,6 @@
                   </paginate>
                 </div>
               </div>
-            </div>
-
-            <div class="col-md-12 mt-5">
-              {{ contentText }}
-            </div>
-
-            <div class="col-md-12">
-              <router-link to="/anime" class="btn btn-primary btn-sm">
-                Go to Animes
-              </router-link>
             </div>
           </div>
         </div>

@@ -28,6 +28,12 @@
                 Go to Dashboard
               </router-link>
             </div>
+
+            <div class="col-md-12 my-2">
+              <router-link to="/anime/create" class="btn btn-danger btn-sm">
+                Add Anime
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
