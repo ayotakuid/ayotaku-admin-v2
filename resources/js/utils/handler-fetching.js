@@ -124,11 +124,38 @@ const handlerFethcingScheduleWeek = async () => {
   }
 }
 
+const handlerFetchingSearchAnime = async (token, anime) => {
+  const headersSearchAnime = new Headers();
+  headersSearchAnime.append("Content-Type", "application/json");
+  headersSearchAnime.append("Authorization", `Bearer ${token}`);
+
+  const bodyRaw = JSON.stringify({
+    nama_anime: anime,
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: headersSearchAnime,
+    body: bodyRaw,
+    redirect: "follow",
+  };
+
+  try {
+    const searchAnime = await fetch(`${BASE_URL}/anime/search`, requestOptions);
+    const result = await searchAnime.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  };
+};
+
 export default {
   checkingToken,
   handlerFetchingSignOut,
   handlerFetchingProfile,
   handlerFetchingTotal,
   handlerFetchingLogs,
-  handlerFethcingScheduleWeek
+  handlerFethcingScheduleWeek,
+  handlerFetchingSearchAnime,
 };

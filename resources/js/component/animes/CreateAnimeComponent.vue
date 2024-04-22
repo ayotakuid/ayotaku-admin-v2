@@ -1,29 +1,40 @@
 <script setup>
   import { ref, watch } from "vue";
   import _ from "lodash";
+  import Fetching from '../../utils/handler-fetching';
+  import Cookies from '../../utils/handler-cookies';
+  import ListCardAnimeComponent from "../animes/card/ListCardAnimeComponent.vue";
 
   const textSelect2 = ref('');
   const indicatorLoading = ref(false)
   const searchResult = ref('');
+  const tokenCookies = Cookies.getCookies('tokenAyotaku');
+  const propsForResult = ref();
 
   // fungsi dari lodash untuk menunda execute function secara langsung
-  const searchAnimeMyanimelist = _.debounce(() => {
+  const searchAnimeMyanimelist = _.debounce(async () => {
     if (textSelect2.value.length < 5) {
       searchResult.value = ''
       return
     }
 
     indicatorLoading.value = true
+    const responseSearchAnime = await Fetching.handlerFetchingSearchAnime(tokenCookies, textSelect2.value)
+
     setTimeout(() => {
       indicatorLoading.value = false
-      searchResult.value = textSelect2.value
+      searchResult.value = responseSearchAnime
     }, 2000) //delay 2 detik dari setTimeout
 
-  }, 1000) //delay 1 detik
+  }, 1000) //delay 1 detik debounce
 
   watch(textSelect2, (newSelect2, oldSelect2) => {
     searchAnimeMyanimelist();
   });
+
+  const handlerClickAnime = (id) => {
+    console.log(id);
+  }
 </script>
 
 <template>
@@ -43,16 +54,30 @@
               </span>
             </div>
 
-            <div class="col-md-4 col-sm-12 button-checking">
+            <!-- <div class="col-md-4 col-sm-12 button-checking">
               <button class="btn btn-success btn-sm mx-2">Search</button>
-            </div>
+            </div> -->
 
             <div class="col-md-12 my-5">
               <div class="card shadow-sm">
                 <div class="card-body">
                   <div class="container">
                     <div class="row">
-                      {{ indicatorLoading ? 'Loading...' : searchResult }}
+                      <div v-if="indicatorLoading">
+                        Loading...
+                      </div>
+                      <div v-else>
+                        <div class="box-hasil-pencarian">
+                          {{ searchResult?.message }}
+                        </div>
+                        
+                        <div v-if="searchResult.length === 0" class="row">
+                          Tidak ada data
+                        </div>
+                        <div v-else class="row">
+                          <ListCardAnimeComponent :dataSearch="searchResult"/>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
