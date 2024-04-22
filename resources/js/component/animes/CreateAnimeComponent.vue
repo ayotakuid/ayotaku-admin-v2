@@ -9,7 +9,6 @@
   const indicatorLoading = ref(false)
   const searchResult = ref('');
   const tokenCookies = Cookies.getCookies('tokenAyotaku');
-  const propsForResult = ref();
 
   // fungsi dari lodash untuk menunda execute function secara langsung
   const searchAnimeMyanimelist = _.debounce(async () => {
@@ -31,10 +30,6 @@
   watch(textSelect2, (newSelect2, oldSelect2) => {
     searchAnimeMyanimelist();
   });
-
-  const handlerClickAnime = (id) => {
-    console.log(id);
-  }
 </script>
 
 <template>
