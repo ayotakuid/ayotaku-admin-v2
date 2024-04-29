@@ -44,7 +44,7 @@
 
   const items = ref([]),
         currentPage = ref(1),
-        perPage = 20;
+        perPage = 21;
 
   onMounted(async () => {
     if (tokenCookies) {

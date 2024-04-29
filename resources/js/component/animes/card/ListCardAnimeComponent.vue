@@ -1,8 +1,12 @@
 <script setup>
-import { ref, watchEffect } from "vue"
+  import { ref, watchEffect } from "vue"
+  import Fetching from '../../../utils/handler-fetching';
+  import Cookies from '../../../utils/handler-cookies';
 
   const search = defineProps(['dataSearch'])
   const dataSearch = ref()
+  const detailAnime = ref(null);
+  const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const indicatorLoading = ref({
     loading: false,
     id: null
@@ -12,8 +16,37 @@ import { ref, watchEffect } from "vue"
     dataSearch.value = search.dataSearch?.data;
   })
 
-  const handlerDetailsAnime = (id) => {
+  const limitDescAnime = (text) => {
+    const limit = 150,
+          trimedString = text?.substring(0, limit);
+    
+    return trimedString;
+  }
+
+  const genresAnime = (genres) => {
+    if (!genres) return '';
+
+    return genres.map((genre) => genre.name).join(', ');
+  }
+
+  const sourceAnime = (source) => {
+    const splitSource = source.split('_');
+    const mappingSouece = splitSource.map((text) => {
+      return text.charAt(0).toUpperCase() + text.slice(1)
+    }).join(' ')
+
+    return mappingSouece
+  }
+  
+  const studiosAnime = (studios) => {
+    if (!studios) return '';
+
+    return studios.map((studio) => studio.name).join(', ');
+  }
+
+  const handlerDetailsAnime = async (id) => {
     const idSelected = dataSearch.value?.data.find((anime) => anime.node.id === id)
+    detailAnime.value = null;
     
     if (indicatorLoading.value.loading) {
       return
@@ -23,11 +56,13 @@ import { ref, watchEffect } from "vue"
       indicatorLoading.value.loading = true
       indicatorLoading.value.id = id
 
+      const fetchingDetail = await Fetching.handlerFetchingDetailAnime(tokenAyotaku, id);
+      detailAnime.value = fetchingDetail;
+
       setTimeout(() => {
         indicatorLoading.value.loading = false
         indicatorLoading.value.id = null 
-      }, 1500)
-      console.log(indicatorLoading.value);
+      }, 1000)
     }
   }
 </script>
@@ -40,7 +75,7 @@ import { ref, watchEffect } from "vue"
         <div class="card-toolbar">
           <button 
             type="button" 
-            class="btn btn-sm btn-secondary"
+            class="btn btn-secondary btn-sm"
             data-bs-toggle="modal"
             data-bs-target="#modal-anime"
             @click="handlerDetailsAnime(anime?.node?.id)"
@@ -65,11 +100,11 @@ import { ref, watchEffect } from "vue"
   </div>
 
   <!-- MODAL DETAIL ANIME -->
-  <div class="modal fade" tabindex="-1" id="modal-anime" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered">
+  <div class="modal fade modal-lg" tabindex="-1" id="modal-anime" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title">Judul Anime</h3>
+          <h3 class="modal-title fw-bold">{{ detailAnime?.data[0]?.title ?? 'Loading...' }}</h3>
 
           <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
             <i class="fa-solid fa-x"></i>
@@ -78,14 +113,65 @@ import { ref, watchEffect } from "vue"
         </div>
 
         <div class="modal-body">
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nulla quia sequi corporis facilis, impedit exercitationem perferendis. Quibusdam ullam esse veniam consequuntur dignissimos aspernatur culpa doloribus, non provident quasi accusamus dicta.</p>
+          <div v-if="detailAnime" class="container">
+            <div class="row">
+              <div class="col-md-4 text-center">
+                <img :src="detailAnime?.data[0].main_picture.medium" :alt="detailAnime?.data[0]?.title" class="rounded" width="200px">
+              </div>
+              <div class="col-md-8">
+                <span class="item-right">Sinopsis:</span>
+                <div class="mb-2">
+                  {{ detailAnime?.data[0]?.synopsis ? `${limitDescAnime(detailAnime?.data[0]?.synopsis)}` : 'Loading...' }}
+                </div>
+
+                <span class="item-right">Genres:</span>
+                <div class="mb-2">
+                  {{ detailAnime?.data[0]?.genres ? genresAnime(detailAnime?.data[0]?.genres) : '' }}
+                </div>
+
+                <span class="item-right">Season:</span>
+                <div class="mb-2">
+                  {{ detailAnime?.data[0]?.start_season?.season }} {{ detailAnime?.data[0]?.start_season?.year }}
+                </div>
+
+                <span class="item-right">Source:</span>
+                <div class="mb-2">
+                  {{ detailAnime?.data[0]?.source ? sourceAnime(detailAnime?.data[0]?.source) : '' }}
+                </div>
+
+                <span class="item-right">Status, Start Date, & Episode:</span>
+                <div class="mb-2">
+                  {{ detailAnime?.data[0]?.status ? sourceAnime(detailAnime?.data[0]?.status) : '' }} | {{ detailAnime?.data[0]?.start_date }} | {{ detailAnime?.data[0]?.num_episodes }} Episode
+                </div>
+
+                <span class="item-right">Studio:</span>
+                <div class="mb-2">
+                  {{ detailAnime?.data[0]?.studios ? studiosAnime(detailAnime?.data[0]?.studios) : '' }}
+                </div>
+              </div>
+              
+              <div class="col-md-12 text-center my-5">
+                <iframe :src="detailAnime?.data[1][0]?.trailer?.embed_url" width="86%" height="350px" class="rounded"></iframe>
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="container">
+            Loading...
+          </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-sm">Add Database</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.item-right {
+  font-weight: bold;
+}
+</style>

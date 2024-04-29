@@ -150,6 +150,27 @@ const handlerFetchingSearchAnime = async (token, anime) => {
   };
 };
 
+const handlerFetchingDetailAnime = async (token, animeId) => {
+  const headersDetailAnime = new Headers();
+  headersDetailAnime.append("Content-Type", "application/json");
+  headersDetailAnime.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: "POST",
+    headers: headersDetailAnime,
+    redirect: "follow",
+  };
+
+  try {
+    const detailAnime = await fetch(`${BASE_URL}/anime/mal/${animeId}/detail`, requestOptions);
+    const result = await detailAnime.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  };
+};
+
 export default {
   checkingToken,
   handlerFetchingSignOut,
@@ -158,4 +179,5 @@ export default {
   handlerFetchingLogs,
   handlerFethcingScheduleWeek,
   handlerFetchingSearchAnime,
+  handlerFetchingDetailAnime,
 };
