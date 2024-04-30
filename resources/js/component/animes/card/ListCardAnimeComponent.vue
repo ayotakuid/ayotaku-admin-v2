@@ -2,11 +2,15 @@
   import { ref, watchEffect } from "vue"
   import Fetching from '../../../utils/handler-fetching';
   import Cookies from '../../../utils/handler-cookies';
+  import ButtonSaveComponent from "../card/ButtonSaveComponent.vue";
 
   const search = defineProps(['dataSearch'])
   const dataSearch = ref()
   const detailAnime = ref(null);
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
+  const insertDatabase = ref({
+    trailer: null
+  });
   const indicatorLoading = ref({
     loading: false,
     id: null
@@ -47,6 +51,7 @@
   const handlerDetailsAnime = async (id) => {
     const idSelected = dataSearch.value?.data.find((anime) => anime.node.id === id)
     detailAnime.value = null;
+    insertDatabase.value.trailer = null;
     
     if (indicatorLoading.value.loading) {
       return
@@ -64,6 +69,10 @@
         indicatorLoading.value.id = null 
       }, 1000)
     }
+  }
+
+  const handlerClickSelectedAnime = (url) => {
+    insertDatabase.value.trailer = url
   }
 </script>
 
@@ -93,7 +102,7 @@
       </div>
       <div class="card-body">
         <div class="text-center px-4">
-          <img class="card-rounded-bottom mb-3 shadow-sm rounded" height="300px" width="200px" alt="" :src="anime?.node?.main_picture?.medium">
+          <img class="card-rounded-bottom mb-3 shadow-sm rounded img-fluid" alt="" :src="anime?.node?.main_picture?.medium">
         </div>
       </div>
     </div>
@@ -150,9 +159,36 @@
                 </div>
               </div>
               
-              <div class="col-md-12 text-center my-5">
-                <iframe :src="detailAnime?.data[1][0]?.trailer?.embed_url" width="86%" height="350px" class="rounded"></iframe>
+              <div class="col-md-12 my-5">
+                <h2>Choose Video Trailer:</h2>
+                <div class="row">
+                  <div 
+                    v-for="videoAnime in detailAnime?.data[1]" 
+                    :key="videoAnime?.title" 
+                    class="col-md-6"
+                  >
+                    <div>
+                      <h3 class="fw-bold text-trailer" @click="handlerClickSelectedAnime(videoAnime?.trailer?.embed_url)">
+                        <input 
+                          type="radio" 
+                          :value="videoAnime?.trailer?.embed_url" 
+                          v-model="insertDatabase.trailer"
+                        > {{ videoAnime?.title }}
+                      </h3>
+                    </div>
+                    <img 
+                      :src="videoAnime?.trailer?.images?.medium_image_url" 
+                      class="img-fluid rounded mb-5 img-trailer" 
+                      :alt="videoAnime?.title"
+                      @click="handlerClickSelectedAnime(videoAnime?.trailer?.embed_url)"
+                    >
+                  </div>
+                  <div class="rounded text-center mt-5">
+                    <iframe :src="insertDatabase?.trailer" height="350px" width="86%" class="rounded"></iframe>
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
 
@@ -162,8 +198,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary btn-sm">Add Database</button>
+          <ButtonSaveComponent :idAnime="detailAnime?.data[0]?.id"/>
         </div>
       </div>
     </div>
@@ -173,5 +208,13 @@
 <style scoped>
 .item-right {
   font-weight: bold;
+}
+
+.img-trailer {
+  cursor: pointer;
+}
+
+.text-trailer {
+  cursor: pointer;
 }
 </style>
