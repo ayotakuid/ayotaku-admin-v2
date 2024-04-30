@@ -35,9 +35,8 @@ php artisan serve
 ```
 
 ## Contributing
-Thanks for `Rezu0` dan `Adick Kevin Christiantio Nalle` sudah membantu dan mendevelop Web Admin ini. Dan jika ingin ikut dalam kontribusi di dalam pengembangan web ini silahkan hubungi salah satu dari kita.
+Thanks for `Rezu0` sudah membantu dan mendevelop Web Admin ini. Dan jika ingin ikut dalam kontribusi di dalam pengembangan web ini silahkan hubungi salah satu dari kita.
 <pre><a href="https://github.com/Rezu0" target="_blank"><img src="https://avatars.githubusercontent.com/u/54113198?v=4" width="70px" alt="Rezu0"></a> Rezu0</pre>
-<pre><a href="https://github.com/ChrisNalle" target="_blank"><img src="https://avatars.githubusercontent.com/u/97382242?v=4" alt="Adick Kevin Christiantio Nalle" width="70px"></a> ChrisNalle</pre>
 
 ## Project status
 Project ini dalam pengembangan awal, dan untuk kedepannya akan banyak sekali Commit yang akan di lakukan
