@@ -8,13 +8,14 @@
   const dataSearch = ref()
   const detailAnime = ref(null);
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
-  const insertDatabase = ref({
-    trailer: null
-  });
   const indicatorLoading = ref({
     loading: false,
     id: null
   })
+  const videoTrailer = ref({
+    trailer: null
+  });
+  const dataInsert = ref(null)
 
   watchEffect(() => {
     dataSearch.value = search.dataSearch?.data;
@@ -51,7 +52,7 @@
   const handlerDetailsAnime = async (id) => {
     const idSelected = dataSearch.value?.data.find((anime) => anime.node.id === id)
     detailAnime.value = null;
-    insertDatabase.value.trailer = null;
+    videoTrailer.value.trailer = null;
     
     if (indicatorLoading.value.loading) {
       return
@@ -63,6 +64,31 @@
 
       const fetchingDetail = await Fetching.handlerFetchingDetailAnime(tokenAyotaku, id);
       detailAnime.value = fetchingDetail;
+      const objectAnime = {
+        id_anime: detailAnime.value?.data[0]?.id,
+        nama_anime: {
+          eng: detailAnime.value?.data[0]?.alternative_titles.en,
+          kanji: detailAnime.value?.data[0]?.alternative_titles.ja,
+          romanji: detailAnime.value?.data[0]?.title
+        },
+        foto_anime: detailAnime.value?.data[0]?.main_picture.medium,
+        start_date: detailAnime.value?.data[0]?.start_date,
+        end_date: detailAnime.value?.data[0]?.end_date,
+        sinopsis: detailAnime.value?.data[0]?.synopsis,
+        rating: detailAnime.value?.data[0]?.mean,
+        media_type: detailAnime.value?.data[0]?.media_type,
+        status: {
+          statusAiring: sourceAnime(detailAnime.value?.data[0]?.status),
+          total_eps: detailAnime.value?.data[0]?.num_episodes,
+        },
+        genres: detailAnime.value?.data[0]?.genres,
+        season: detailAnime.value?.data[0]?.start_season,
+        source: sourceAnime(detailAnime.value?.data[0]?.source),
+        studio: detailAnime.value?.data[0]?.studios,
+        video: videoTrailer.value?.trailer
+      }
+      
+      dataInsert.value = objectAnime
 
       setTimeout(() => {
         indicatorLoading.value.loading = false
@@ -72,7 +98,8 @@
   }
 
   const handlerClickSelectedAnime = (url) => {
-    insertDatabase.value.trailer = url
+    videoTrailer.value.trailer = url
+    dataInsert.value.video = url
   }
 </script>
 
@@ -158,7 +185,7 @@
                   {{ detailAnime?.data[0]?.studios ? studiosAnime(detailAnime?.data[0]?.studios) : '' }}
                 </div>
               </div>
-              
+
               <div class="col-md-12 my-5">
                 <h2>Choose Video Trailer:</h2>
                 <div class="row">
@@ -172,7 +199,7 @@
                         <input 
                           type="radio" 
                           :value="videoAnime?.trailer?.embed_url" 
-                          v-model="insertDatabase.trailer"
+                          v-model="videoTrailer.trailer"
                         > {{ videoAnime?.title }}
                       </h3>
                     </div>
@@ -182,9 +209,6 @@
                       :alt="videoAnime?.title"
                       @click="handlerClickSelectedAnime(videoAnime?.trailer?.embed_url)"
                     >
-                  </div>
-                  <div class="rounded text-center mt-5">
-                    <iframe :src="insertDatabase?.trailer" height="350px" width="86%" class="rounded"></iframe>
                   </div>
                 </div>
               </div>
@@ -198,7 +222,9 @@
         </div>
 
         <div class="modal-footer">
-          <ButtonSaveComponent :idAnime="detailAnime?.data[0]?.id"/>
+          <ButtonSaveComponent 
+            :dataAnime="dataInsert"
+          />
         </div>
       </div>
     </div>
