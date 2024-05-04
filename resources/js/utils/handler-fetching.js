@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:9001/api"
+import { BASE_URL } from '../utils/others/config.json';
 
 const checkingToken = async (token) => {
   const headersCheckingToken = new Headers();

@@ -67,19 +67,19 @@
       const objectAnime = {
         id_anime: detailAnime.value?.data[0]?.id,
         nama_anime: {
-          eng: detailAnime.value?.data[0]?.alternative_titles.en,
-          kanji: detailAnime.value?.data[0]?.alternative_titles.ja,
+          eng: detailAnime.value?.data[0]?.alternative_titles?.en ?? null,
+          kanji: detailAnime.value?.data[0]?.alternative_titles?.ja ?? null,
           romanji: detailAnime.value?.data[0]?.title
         },
         foto_anime: detailAnime.value?.data[0]?.main_picture.medium,
         start_date: detailAnime.value?.data[0]?.start_date,
-        end_date: detailAnime.value?.data[0]?.end_date,
+        end_date: detailAnime.value?.data[0]?.end_date ?? null,
         sinopsis: detailAnime.value?.data[0]?.synopsis,
         rating: detailAnime.value?.data[0]?.mean,
         media_type: detailAnime.value?.data[0]?.media_type,
         status: {
           statusAiring: sourceAnime(detailAnime.value?.data[0]?.status),
-          total_eps: detailAnime.value?.data[0]?.num_episodes,
+          total_eps: detailAnime.value?.data[0]?.num_episodes ?? null,
         },
         genres: detailAnime.value?.data[0]?.genres,
         season: detailAnime.value?.data[0]?.start_season,
