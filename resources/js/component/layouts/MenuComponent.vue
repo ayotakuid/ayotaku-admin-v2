@@ -32,7 +32,7 @@ import { ref, watch } from 'vue';
                       </span>
                       <!--end::Svg Icon-->
                   </span>
-                  <a href="/dashboard"><span class="menu-title">Dashboard Admin</span></a>
+                  <router-link to="/dashboard"><span class="menu-title">Dashboard Admin</span></router-link>
                   <span class="menu-arrow"></span>
               </span>
               <!--end:Menu link-->
@@ -40,12 +40,12 @@ import { ref, watch } from 'vue';
               <div class="menu-sub menu-sub-accordion">
                   <!--begin:Menu item-->
                   <div class="menu-item">
-                    <a class="menu-link" :class="{ 'active': active?.name === 'dashboard-page' }" href="/dashboard">
+                    <router-link to="/dashboard" class="menu-link" :class="{ 'active': active?.name === 'dashboard-page' }">
                         <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                         </span>
                         <span class="menu-title">Dashboard Admin</span>
-                    </a>
+                    </router-link>
                 </div>
                   <!--end:Menu item-->											
               </div>
@@ -64,7 +64,7 @@ import { ref, watch } from 'vue';
           <!--begin:Menu item-->
           <div class="menu-item">
               <!--begin:Menu link-->
-              <a class="menu-link" :class="{ 'active': active?.name === 'anime-page' }" href="/anime">
+              <router-link to="/anime" class="menu-link" :class="{ 'active': active?.name === 'anime-page' }">
                   <span class="menu-icon">
                       <!--begin::Svg Icon | path: icons/duotune/abstract/abs014.svg-->
                       <span class="svg-icon svg-icon-2">
@@ -76,7 +76,7 @@ import { ref, watch } from 'vue';
                       <!--end::Svg Icon-->
                   </span>
                   <span class="menu-title">Animes</span>
-              </a>
+              </router-link>
               <!--end:Menu link-->
 
              <!--begin:Menu link-->
