@@ -1,5 +1,5 @@
 <script setup>
-  import { onUpdated, ref, watchEffect } from 'vue';
+  import { onUnmounted, ref } from 'vue';
   import { toast } from 'vue-sonner';
   import Cookies from '../../../utils/handler-cookies';
   import Fetching from '../../../utils/handler-anime-fetching';
@@ -7,9 +7,18 @@
   const idAnime = defineProps(['dataAnime']);
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const indicatorLoading = ref(false);
+  
+  const closeModal = () => {
+    const modalElement = document.getElementById('modal-anime')
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    modal.hide()
 
-  watchEffect(() => {
-    console.log(idAnime?.dataAnime);
+    document.body.style.overflow = '';
+    document.querySelectorAll('.modal-backdrop.fade.show').forEach((el) => el.remove())
+  }
+
+  onUnmounted(() => {
+    document.body.style.overflow = '';
   })
 
   const handlerClickSave = () => {
@@ -36,13 +45,7 @@
           indicatorLoading.value = false
           
           setTimeout(() => {
-            // CLOSE MODAL
-            const modalElement = document.getElementById('modal-anime')
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            modal.hide()
-  
-            // REMOVE ELEMENT Modal Backdrop
-            document.querySelectorAll('.modal-backdrop.fade.show').forEach((el) => el.remove())
+            closeModal();
           }, 1000)
           return
         }

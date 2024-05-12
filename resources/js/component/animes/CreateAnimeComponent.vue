@@ -92,12 +92,16 @@
   </div>
 </template>
 
-<style scoped>
+<style>
 div {
   font-size: 15px;
 }
 
 .button-checking {
   margin-top: 11px;
+}
+
+body {
+  overflow: visible !important;
 }
 </style>
