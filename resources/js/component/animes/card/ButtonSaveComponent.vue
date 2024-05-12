@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watchEffect } from 'vue';
+  import { onUpdated, ref, watchEffect } from 'vue';
   import { toast } from 'vue-sonner';
   import Cookies from '../../../utils/handler-cookies';
   import Fetching from '../../../utils/handler-anime-fetching';
@@ -34,6 +34,16 @@
         if (responseCreateAnime.status === 'success') {
           toast.success(responseCreateAnime.message)
           indicatorLoading.value = false
+          
+          setTimeout(() => {
+            // CLOSE MODAL
+            const modalElement = document.getElementById('modal-anime')
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide()
+  
+            // REMOVE ELEMENT Modal Backdrop
+            document.querySelectorAll('.modal-backdrop.fade.show').forEach((el) => el.remove())
+          }, 1000)
           return
         }
       }
