@@ -30,6 +30,8 @@
         {{-- END ICON --}}
       
         <link rel="stylesheet" href="{{ asset('assets/plugins/global/css/select2.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}">
+        <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
       
         @vite(['resources/js/app.js'])
       </head>
