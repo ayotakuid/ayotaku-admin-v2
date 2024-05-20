@@ -32,7 +32,7 @@ import { ref, watch } from 'vue';
                       </span>
                       <!--end::Svg Icon-->
                   </span>
-                  <router-link to="/dashboard"><span class="menu-title">Dashboard Admin</span></router-link>
+                  <router-link to="/dashboard"><span class="menu-title">Main Content</span></router-link>
                   <span class="menu-arrow"></span>
               </span>
               <!--end:Menu link-->
