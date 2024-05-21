@@ -1,69 +1,35 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref, watchEffect } from 'vue';
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
+  import Fetching from '../../utils/handler-fetching';
+  import Cookies from '../../utils/handler-cookies';
+  import { toast } from 'vue-sonner';
 
   DataTable.use(DataTablesCore);
 
   const columns = [
-    { data: 'name' },
-    { data: 'position' },
-    { data: 'office' },
-    { data: 'extn' },
-    { data: 'start_date' },
     { 
-      data: 'salary',
+      data: 'data.nama_anime',
       render: (data, type, row) => {
-        return `<button class="btn btn-primary btn-sm">${data}</button>`
-      } 
-    },
-  ];
-  const datatableData = [
-    {
-      "id": "1",
-      "name": "Tiger Nixon",
-      "position": "System Architect",
-      "salary": "$320,800",
-      "start_date": "2011/04/25",
-      "office": "Edinburgh",
-      "extn": "5421"
+        return data?.romanji ? data?.romanji : data?.eng
+      }
     },
     {
-      "id": "2",
-      "name": "Garrett Winters",
-      "position": "Accountant",
-      "salary": "$170,750",
-      "start_date": "2011/07/25",
-      "office": "Tokyo",
-      "extn": "8422"
+      data: 'data.source'
     },
     {
-      "id": "3",
-      "name": "Ashton Cox",
-      "position": "Junior Technical Author",
-      "salary": "$86,000",
-      "start_date": "2009/01/12",
-      "office": "San Francisco",
-      "extn": "1562"
+      data: 'data.studio',
+      render: (data, type, row) => {
+        return data[0].name
+      }
     },
     {
-      "id": "4",
-      "name": "Cedric Kelly",
-      "position": "Senior Javascript Developer",
-      "salary": "$433,060",
-      "start_date": "2012/03/29",
-      "office": "Edinburgh",
-      "extn": "6224"
-    },
-    {
-      "id": "5",
-      "name": "Airi Satou",
-      "position": "Accountant",
-      "salary": "$162,700",
-      "start_date": "2008/11/28",
-      "office": "Tokyo",
-      "extn": "5407"
-    },
+      data: 'data.genres',
+      render: (data, type, row) => {
+        return data.map((genre) => genre.name).join(', ')
+      }
+    }
   ];
 
   const data = [
@@ -75,6 +41,25 @@
 
   const emit = defineEmits(['parents'])
   emit('parents', data);
+
+  const dataAnime = ref(null);
+  const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
+
+  watchEffect(async () => {
+    const fetchingShowAnime = await Fetching.handlerFetchingShowAllAnime(tokenAyotaku);
+
+    if (fetchingShowAnime.status) {
+      if (fetchingShowAnime.status === 'success') {
+        dataAnime.value = fetchingShowAnime?.data
+      }
+    }
+
+    if (!fetchingShowAnime.status) {
+      toast.error('Gagal Fetching Anime')
+      return;
+    }
+
+  })
 </script>
 
 <template>
@@ -96,7 +81,7 @@
             <div class="col-md-12 my-2">
               <DataTable
                 :columns="columns"
-                :data="datatableData"
+                :data="dataAnime"
                 class="table table-striped table-row-bordered gy-5 gs-7 border rounded"
                 width="100%"
                 :options="{
@@ -105,17 +90,16 @@
                   pageLength: 5,
                   lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, 'All'] ],
                   scrollX: true,
-                  scrollY: true
+                  scrollY: true,
+                  order: [[0]]
                 }"
               >
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Extn.</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th>Nama Anime</th>
+                    <th>Source</th>
+                    <th>Studio</th>
+                    <th>Genres</th>
                   </tr>
                 </thead>
               </DataTable>
