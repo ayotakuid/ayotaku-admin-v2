@@ -171,6 +171,27 @@ const handlerFetchingDetailAnime = async (token, animeId) => {
   };
 };
 
+const handlerFetchingShowAllAnime = async (token) => {
+  const headersShowAnime = new Headers();
+  headersShowAnime.append("Content-Type", "application/json");
+  headersShowAnime.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: headersShowAnime,
+    redirect: "follow"
+  }
+
+  try {
+    const showAnime = await fetch(`${BASE_URL}/anime/all`, requestOptions);
+    const result = await showAnime.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   checkingToken,
   handlerFetchingSignOut,
@@ -180,4 +201,5 @@ export default {
   handlerFethcingScheduleWeek,
   handlerFetchingSearchAnime,
   handlerFetchingDetailAnime,
+  handlerFetchingShowAllAnime,
 };
