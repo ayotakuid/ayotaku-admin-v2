@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watchEffect } from 'vue';
+  import { ref, render, watchEffect } from 'vue';
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
   import Fetching from '../../utils/handler-fetching';
@@ -13,22 +13,30 @@
       data: 'data.nama_anime',
       render: (data, type, row) => {
         return data?.romanji ? data?.romanji : data?.eng
-      }
+      },
+      width: '400px'
     },
     {
-      data: 'data.source'
+      data: 'data.source',
+      width: '200px'
     },
     {
       data: 'data.studio',
       render: (data, type, row) => {
         return data[0].name
-      }
+      },
+      width: '200px'
     },
     {
       data: 'data.genres',
       render: (data, type, row) => {
         return data.map((genre) => genre.name).join(', ')
-      }
+      },
+      width: '500px'
+    },
+    {
+      data: 'whois.username_mal',
+      width: '200px'
     }
   ];
 
@@ -90,7 +98,6 @@
                   pageLength: 5,
                   lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, 'All'] ],
                   scrollX: true,
-                  scrollY: true,
                   order: [[0]]
                 }"
               >
@@ -100,6 +107,7 @@
                     <th>Source</th>
                     <th>Studio</th>
                     <th>Genres</th>
+                    <th>Admin</th>
                   </tr>
                 </thead>
               </DataTable>
@@ -141,5 +149,10 @@
   outline: none;
   background-color: #f8f9fa;
   color: #495057;
+}
+
+.table {
+  overflow-x: auto;
+  white-space: nowrap;
 }
 </style>
