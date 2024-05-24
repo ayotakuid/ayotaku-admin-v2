@@ -30,9 +30,21 @@ const formatDateSchedule = (ISODate) => {
   const dateLocale = new Date(ISODate).toLocaleString('id-ID', options)
 
   return `${dateLocale} WIB`;
-} 
+}
+
+const formatDateStart = (date) => {
+  const newDate = new Date(date);
+  const month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  const monthName = month[newDate.getMonth()];
+
+  const day = newDate.getDate();
+  const year = newDate.getFullYear();
+
+  return `${day} ${monthName} ${year}`;
+}
 
 export default {
   formatDateOnline,
-  formatDateSchedule
+  formatDateSchedule,
+  formatDateStart
 }
