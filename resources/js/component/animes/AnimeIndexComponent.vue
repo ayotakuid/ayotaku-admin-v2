@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watchEffect } from 'vue';
+  import { onMounted, onUpdated, ref, watchEffect } from 'vue';
   import { toast } from 'vue-sonner';
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
@@ -108,7 +108,6 @@
       toast.error('Gagal Fetching Anime')
       return;
     }
-
   })
 </script>
 
@@ -143,13 +142,34 @@
                   scrollY: '570px',
                   order: [[0]],
                   fixedColumns: {
-                    leftColumns: 2,
+                    leftColumns: 1,
                     rightColumns: 0
                   },
                 }"
               >
                 <template #action="props">
-                  <button class="btn btn-danger btn-sm" @click="() => toast.success(props.rowData.uuid)">Delete {{ props.rowData.uuid }}</button>
+                  <div class="btn-group dropstart justify-content-center">
+                    <button class="btn btn-light-warning btn-icon rounded mx-3 mt-1 btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-5,40">
+                      <i class="fa-solid fa-ellipsis-vertical fs-3"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item sync">
+                          Sync to Myanimelist
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item delete" @click="() => toast.success(props.rowData.slug)">
+                          Delete {{ props.rowData.uuid }}
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item edit">
+                          Manual Edits
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </template>
 
                 <thead>
@@ -167,6 +187,7 @@
                 </thead>
               </DataTable>
             </div>
+
           </div>
         </div>
       </div>
@@ -214,5 +235,30 @@
 
 .dtfc-fixed-left {
   z-index: 10;
+}
+
+.table th, .table td {
+  border: 1px solid #dee2e6;
+}
+
+ul li {
+  cursor: pointer;
+}
+
+.sync {
+ transition: 0.5ms;
+}
+
+.sync:hover {
+  background-color: #f1bc00;
+}
+
+.delete {
+  transition: 0.5ms;
+}
+
+.delete:hover {
+  background-color: #d9214e;
+  color: #ffffff;
 }
 </style>
