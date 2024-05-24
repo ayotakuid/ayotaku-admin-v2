@@ -16,6 +16,8 @@
         "bootstrap": "^5.3.3",
         "datatables.net": "^2.0.7",
         "datatables.net-bs5": "^2.0.7",
+        "datatables.net-fixedcolumns-dt": "^5.0.0",
+        "datatables.net-fixedheader-dt": "^4.0.1",
         "datatables.net-select": "^2.0.2",
         "datatables.net-vue3": "^3.0.1",
         "lodash": "^4.17.21",

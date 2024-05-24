@@ -5,6 +5,7 @@ import routes from './routes';
 import IndexComponent from './component/IndexComponent.vue';
 import Paginate from 'vuejs-paginate-next';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+import 'datatables.net-fixedcolumns-dt';
 
 const router = createRouter({
   history: createWebHistory(),
