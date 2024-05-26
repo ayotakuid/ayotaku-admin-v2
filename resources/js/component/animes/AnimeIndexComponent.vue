@@ -6,6 +6,7 @@
   import Fetching from '../../utils/handler-fetching';
   import Cookies from '../../utils/handler-cookies';
   import FormatDate from '../../utils/handler-date';
+import ModalImageComponent from './modal/ModalImageComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -109,6 +110,11 @@
       return;
     }
   })
+
+  const handlerCloseModal = () => {
+    const modal = document.getElementById('modal-image');
+    modal.style.display = "none";
+  }
 </script>
 
 <template>
@@ -160,13 +166,19 @@
                       </li>
                       <li>
                         <a class="dropdown-item delete" @click="() => toast.success(props.rowData.slug)">
-                          Delete {{ props.rowData.uuid }}
+                          Delete
                         </a>
                       </li>
                       <li>
                         <a class="dropdown-item edit">
                           Manual Edits
                         </a>
+                      </li>
+                      <li>
+                        <ModalImageComponent
+                          :uuidAnime="props.rowData?.data?.id_anime" 
+                          :imageLink="props.rowData?.data?.foto_anime"
+                        />
                       </li>
                     </ul>
                   </div>
@@ -188,6 +200,12 @@
               </DataTable>
             </div>
 
+            <!-- MODAL IMAGE DI DataTable -->
+            <div id="modal-image" class="modal-image">
+              <span class="close" @click="handlerCloseModal">&times;</span>
+              <img class="modal-content" id="element">
+              <div id="caption"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -260,5 +278,83 @@ ul li {
 .delete:hover {
   background-color: #d9214e;
   color: #ffffff;
+}
+
+/* The Modal (background) */
+.modal-image {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 30%;
+  max-width: 500px;
+}
+
+/* Caption of Modal Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {  
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+  from {-webkit-transform:scale(0)} 
+  to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+  .modal-content {
+    width: 100%;
+  }
 }
 </style>
