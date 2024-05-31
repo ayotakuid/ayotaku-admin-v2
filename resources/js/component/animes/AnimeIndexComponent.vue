@@ -1,12 +1,13 @@
 <script setup>
-  import { onMounted, onUpdated, ref, watchEffect } from 'vue';
+  import { ref, watchEffect } from 'vue';
   import { toast } from 'vue-sonner';
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
   import Fetching from '../../utils/handler-fetching';
   import Cookies from '../../utils/handler-cookies';
   import FormatDate from '../../utils/handler-date';
-import ModalImageComponent from './modal/ModalImageComponent.vue';
+  import ModalImageComponent from './modal/ModalImageComponent.vue';
+  import ModalDeleteAnimeComponent from './modal/ModalDeleteAnimeComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -95,6 +96,7 @@ import ModalImageComponent from './modal/ModalImageComponent.vue';
 
   const dataAnime = ref(null);
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
+  const animeDelete = ref();
 
   watchEffect(async () => {
     const fetchingShowAnime = await Fetching.handlerFetchingShowAllAnime(tokenAyotaku);
@@ -109,11 +111,24 @@ import ModalImageComponent from './modal/ModalImageComponent.vue';
       toast.error('Gagal Fetching Anime')
       return;
     }
-  })
+  });
 
   const handlerCloseModal = () => {
     const modal = document.getElementById('modal-image');
     modal.style.display = "none";
+  }
+
+  const handlerAnimeId = (idAnime, namaAnime) => {
+    animeDelete.value = null
+    animeDelete.value = {
+      uuid: idAnime,
+      nama: namaAnime, 
+    };
+  }
+
+  // handler updating data after delete anime
+  const handlerReceiveData = (data) => {
+    dataAnime.value = data
   }
 </script>
 
@@ -165,7 +180,12 @@ import ModalImageComponent from './modal/ModalImageComponent.vue';
                         </a>
                       </li>
                       <li>
-                        <a class="dropdown-item delete" @click="() => toast.success(props.rowData.slug)">
+                        <a 
+                          class="dropdown-item delete"
+                          @click="handlerAnimeId(props?.rowData?.uuid, props?.rowData?.data?.nama_anime?.romanji)" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#delete-anime"
+                        >
                           Delete
                         </a>
                       </li>
@@ -203,9 +223,15 @@ import ModalImageComponent from './modal/ModalImageComponent.vue';
             <!-- MODAL IMAGE DI DataTable -->
             <div id="modal-image" class="modal-image">
               <span class="close" @click="handlerCloseModal">&times;</span>
-              <img class="modal-content" id="element">
+              <img class="modal-content-image" id="element">
               <div id="caption"></div>
             </div>
+
+            <ModalDeleteAnimeComponent 
+              :dataAnime="animeDelete"
+              :listAnime="dataAnime"
+              @updateDataAnime="handlerReceiveData"
+            />
           </div>
         </div>
       </div>
@@ -296,7 +322,7 @@ ul li {
 }
 
 /* Modal Content (image) */
-.modal-content {
+.modal-content-image {
   margin: auto;
   display: block;
   width: 30%;
@@ -316,7 +342,7 @@ ul li {
 }
 
 /* Add Animation */
-.modal-content, #caption {  
+.modal-content-image, #caption {  
   -webkit-animation-name: zoom;
   -webkit-animation-duration: 0.6s;
   animation-name: zoom;
@@ -353,7 +379,7 @@ ul li {
 
 /* 100% Image Width on Smaller Screens */
 @media only screen and (max-width: 700px){
-  .modal-content {
+  .modal-content-image {
     width: 100%;
   }
 }
