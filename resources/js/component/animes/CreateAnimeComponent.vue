@@ -10,6 +10,16 @@
   const searchResult = ref('');
   const tokenCookies = Cookies.getCookies('tokenAyotaku');
 
+  const data = [
+    {
+      name: 'anime-page',
+      text: 'Create Anime Page',
+    },
+  ];
+
+  const emit = defineEmits(['parents'])
+  emit('parents', data);
+
   // fungsi dari lodash untuk menunda execute function secara langsung
   const searchAnimeMyanimelist = _.debounce(async () => {
     if (textSelect2.value.length < 5) {
