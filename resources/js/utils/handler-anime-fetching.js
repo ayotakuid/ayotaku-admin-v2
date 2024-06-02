@@ -48,7 +48,29 @@ const softDeleteAnime = async (token, data) => {
   }
 }
 
+const showDeleteAnime = async (token) => {
+  const headersShowDelete = new Headers();
+  headersShowDelete.append("Content-Type", "application/json");
+  headersShowDelete.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headersShowDelete,
+    redirect: 'follow',
+  }
+
+  try {
+    const showDeleteAnime = await fetch(`${BASE_URL}/anime/all/delete`, requestOptions);
+    const result = await showDeleteAnime.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  } 
+}
+
 export default {
   createAnime,
-  softDeleteAnime
+  softDeleteAnime,
+  showDeleteAnime,
 }
