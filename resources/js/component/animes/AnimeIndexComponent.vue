@@ -143,7 +143,11 @@
                 Go to Dashboard
               </router-link>
 
-              <router-link to="/anime/create" class="btn btn-success btn-sm mx-2">
+              <router-link to="/anime/recovery-anime" class="btn btn-warning btn-sm mx-2">
+                Recovery Anime
+              </router-link>
+
+              <router-link to="/anime/create" class="btn btn-success btn-sm">
                 Add Anime
               </router-link>
             </div>
@@ -168,6 +172,7 @@
                   },
                 }"
               >
+              
                 <template #action="props">
                   <div class="btn-group dropstart justify-content-center">
                     <button class="btn btn-light-warning btn-icon rounded mx-3 mt-1 btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-5,40">
