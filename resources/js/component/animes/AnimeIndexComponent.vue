@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watchEffect } from 'vue';
+  import { onUpdated, ref, watchEffect } from 'vue';
   import { toast } from 'vue-sonner';
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
@@ -139,16 +139,28 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 my-2 d-flex justify-content-end">
-              <router-link to="/" class="btn btn-primary btn-sm">
-                Go to Dashboard
+              <router-link 
+                to="/" 
+                class="btn btn-primary btn-sm btn-icon"
+                v-tooltip.bottom-end="'Back to dashboard'"
+              >
+                <i class="fa-solid fa-arrow-left"></i>
               </router-link>
 
-              <router-link to="/anime/recovery-anime" class="btn btn-warning btn-sm mx-2">
-                Recovery Anime
+              <router-link 
+                to="/anime/recovery-anime" 
+                class="btn btn-warning btn-sm mx-2 btn-icon" 
+                v-tooltip.bottom-end="'Recovery Anime'"
+              >
+                <i class="fa-solid fa-rotate-left"></i>
               </router-link>
 
-              <router-link to="/anime/create" class="btn btn-success btn-sm">
-                Add Anime
+              <router-link 
+                to="/anime/create" 
+                class="btn btn-success btn-sm btn-icon"
+                v-tooltip.bottom-end="'Add Anime'"
+              >
+                <i class="fa-solid fa-plus"></i>
               </router-link>
             </div>
 
@@ -175,13 +187,20 @@
               
                 <template #action="props">
                   <div class="btn-group dropstart justify-content-center">
-                    <button class="btn btn-light-warning btn-icon rounded mx-3 mt-1 btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-5,40">
+                    <button 
+                      class="btn btn-light-warning btn-icon rounded mx-3 mt-1 btn-sm" 
+                      type="button" 
+                      data-bs-toggle="dropdown" 
+                      aria-expanded="false" 
+                      data-bs-offset="-5,40"
+                      v-tooltip.right="'Options'"
+                    >
                       <i class="fa-solid fa-ellipsis-vertical fs-3"></i>
                     </button>
                     <ul class="dropdown-menu">
                       <li>
                         <a class="dropdown-item sync">
-                          Sync to Myanimelist
+                          Sync to MAL
                         </a>
                       </li>
                       <li>

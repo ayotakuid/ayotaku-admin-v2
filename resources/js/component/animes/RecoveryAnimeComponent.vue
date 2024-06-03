@@ -68,8 +68,12 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 my-2 d-flex justify-content-end">
-              <router-link to="/anime" class="btn btn-primary btn-sm">
-                Back
+              <router-link 
+                to="/anime" 
+                class="btn btn-primary btn-sm btn-icon"
+                v-tooltip.bottom-end="'Back to Anime'"
+              >
+                <i class="fa-solid fa-arrow-left"></i>
               </router-link>
             </div>
   

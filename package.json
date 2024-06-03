@@ -20,6 +20,7 @@
         "datatables.net-fixedheader-dt": "^4.0.1",
         "datatables.net-select": "^2.0.2",
         "datatables.net-vue3": "^3.0.1",
+        "floating-vue": "^5.2.2",
         "lodash": "^4.17.21",
         "vue": "^3.4.19",
         "vue-countup-v3": "^1.4.1",

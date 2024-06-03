@@ -48,6 +48,16 @@
       <div class="card-body">
         <div class="container">
           <div class="row">
+            <div class="col-md-12 my-5 d-flex justify-content-end">
+              <router-link 
+                to="/anime" 
+                class="btn btn-primary btn-sm btn-icon"
+                v-tooltip.bottom-end="'Back to anime'"
+              >
+                <i class="fa-solid fa-arrow-left"></i>
+              </router-link>
+            </div>
+
             <div class="col-md-12">
               <h1>Search Anime from Myanimelist</h1>
             </div>
@@ -58,10 +68,6 @@
                 min 5 huruf
               </span>
             </div>
-
-            <!-- <div class="col-md-4 col-sm-12 button-checking">
-              <button class="btn btn-success btn-sm mx-2">Search</button>
-            </div> -->
 
             <div class="col-md-12 my-5">
               <div class="card shadow-sm">
@@ -88,13 +94,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="col-md-12 my-5">
-              <router-link to="/anime" class="btn btn-primary btn-sm">
-                Back to anime
-              </router-link>
-            </div>
-
           </div>
         </div>
       </div>
