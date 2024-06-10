@@ -6,6 +6,7 @@
   import FetchingAnime from '../../utils/handler-anime-fetching';
   import Cookies from '../../utils/handler-cookies';
   import FormatDate from '../../utils/handler-date';
+  import ModalRecoveryAnimeComponent from './modal/ModalRecoveryAnimeComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -41,6 +42,7 @@
     },
   ]
   const dataDataTable = ref();
+  const modalUuid = ref();
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const emit = defineEmits(['parents'])
   emit('parents', data);
@@ -59,6 +61,18 @@
       return;
     }
   });
+
+  const handlerClickRecoveryAnime = (uuidParams, namaParams) => {
+    modalUuid.value = null
+    modalUuid.value = {
+      uuid: uuidParams,
+      nama: namaParams,
+    };
+  }
+
+  const handlerUpdateListRecovery = (data) => {
+    dataDataTable.value = data
+  }
 </script>
 
 <template>
@@ -100,7 +114,9 @@
                   <div class="d-flex justify-content-center">
                     <button 
                       class="btn btn-danger btn-sm btn-icon"
-                      @click="() => toast.success(props.rowData?.uuid)"
+                      @click="handlerClickRecoveryAnime(props.rowData?.uuid, props?.rowData?.data?.nama_anime?.romanji)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#recovery-anime"
                     >
                       <i class="fa-solid fa-rotate-left fs-4"></i>
                     </button>
@@ -116,6 +132,12 @@
                 </thead>
               </DataTable>
             </div>
+            
+            <ModalRecoveryAnimeComponent 
+              :uuidAnime="modalUuid"
+              :tokenAyotaku="tokenAyotaku"
+              @updateListRecovery="handlerUpdateListRecovery"
+            />
           </div>
         </div>
       </div>
