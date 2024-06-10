@@ -69,8 +69,33 @@ const showDeleteAnime = async (token) => {
   } 
 }
 
+const recoveryAnime = async (token, uuid) => {
+  const headersRecoveryAnime = new Headers();
+  headersRecoveryAnime.append("Content-Type", "application/json");
+  headersRecoveryAnime.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: headersRecoveryAnime,
+    body: JSON.stringify({
+      animeUuid: uuid
+    }),
+    redirect: 'follow',
+  }
+
+  try {
+    const recoveryAnime = await fetch(`${BASE_URL}/anime/recovery`, requestOptions);
+    const result = await recoveryAnime.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createAnime,
   softDeleteAnime,
   showDeleteAnime,
+  recoveryAnime,
 }
