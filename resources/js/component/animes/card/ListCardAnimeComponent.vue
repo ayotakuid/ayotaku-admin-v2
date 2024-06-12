@@ -175,9 +175,9 @@
                   {{ detailAnime?.data[0]?.source ? sourceAnime(detailAnime?.data[0]?.source) : '' }}
                 </div>
 
-                <span class="item-right">Status, Start Date, & Episode:</span>
+                <span class="item-right">Status, Start Date, End Date & Episode:</span>
                 <div class="mb-2">
-                  {{ detailAnime?.data[0]?.status ? sourceAnime(detailAnime?.data[0]?.status) : '' }} | {{ detailAnime?.data[0]?.start_date }} | {{ detailAnime?.data[0]?.num_episodes }} Episode
+                  {{ detailAnime?.data[0]?.status ? sourceAnime(detailAnime?.data[0]?.status) : '' }} | {{ detailAnime?.data[0]?.start_date }} | {{ detailAnime?.data[0]?.end_date ?? 'Null' }} | {{ detailAnime?.data[0]?.num_episodes }} Episode
                 </div>
 
                 <span class="item-right">Studio:</span>
