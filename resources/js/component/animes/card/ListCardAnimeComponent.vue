@@ -75,7 +75,7 @@
         start_date: detailAnime.value?.data[0]?.start_date,
         end_date: detailAnime.value?.data[0]?.end_date ?? null,
         sinopsis: detailAnime.value?.data[0]?.synopsis,
-        rating: detailAnime.value?.data[0]?.mean,
+        rating: detailAnime.value?.data[0]?.mean ?? null,
         media_type: detailAnime.value?.data[0]?.media_type,
         status: {
           statusAiring: sourceAnime(detailAnime.value?.data[0]?.status),
