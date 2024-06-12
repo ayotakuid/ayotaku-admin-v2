@@ -8,6 +8,7 @@
   import FormatDate from '../../utils/handler-date';
   import ModalImageComponent from './modal/ModalImageComponent.vue';
   import ModalDeleteAnimeComponent from './modal/ModalDeleteAnimeComponent.vue';
+  import ModalSyncAnimeComponent from './modal/ModalSyncAnimeComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -97,6 +98,7 @@
   const dataAnime = ref(null);
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const animeDelete = ref();
+  const animeSync = ref();
 
   watchEffect(async () => {
     const fetchingShowAnime = await Fetching.handlerFetchingShowAllAnime(tokenAyotaku);
@@ -130,6 +132,14 @@
   const handlerReceiveData = (data) => {
     dataAnime.value = data
   }
+
+  const handlerSyncAnimeToMal = (idAnime, namaAnime) => {
+    animeSync.value = null
+    animeSync.value = {
+      uuid: idAnime,
+      nama: namaAnime,
+    };
+  };
 </script>
 
 <template>
@@ -199,16 +209,21 @@
                     </button>
                     <ul class="dropdown-menu">
                       <li>
-                        <a class="dropdown-item sync">
+                        <a 
+                          class="dropdown-item sync"
+                          data-bs-toggle="modal"
+                          data-bs-target="#sync-anime"
+                          @click="handlerSyncAnimeToMal(props?.rowData?.uuid, props?.rowData?.data?.nama_anime?.romanji)"
+                        >
                           Sync to MAL
                         </a>
                       </li>
                       <li>
                         <a 
                           class="dropdown-item delete"
-                          @click="handlerAnimeId(props?.rowData?.uuid, props?.rowData?.data?.nama_anime?.romanji)" 
                           data-bs-toggle="modal" 
                           data-bs-target="#delete-anime"
+                          @click="handlerAnimeId(props?.rowData?.uuid, props?.rowData?.data?.nama_anime?.romanji)" 
                         >
                           Delete
                         </a>
@@ -251,10 +266,16 @@
               <div id="caption"></div>
             </div>
 
+            <!-- MODAL DELETE ANIME -->
             <ModalDeleteAnimeComponent 
               :dataAnime="animeDelete"
               :listAnime="dataAnime"
               @updateDataAnime="handlerReceiveData"
+            />
+
+            <!-- MODAL SYNC ANIME TO MAL -->
+            <ModalSyncAnimeComponent 
+              :dataAnime="animeSync"
             />
           </div>
         </div>
@@ -296,7 +317,7 @@
 }
 
 .table {
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: auto;
   white-space: nowrap;
 }
