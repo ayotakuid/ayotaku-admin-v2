@@ -47,7 +47,7 @@
       <div class="modal-content">
         
         <div class="modal-body">
-          Yakin ingin Recovery anime <b>{{ uuidAnime?.nama }}</b>
+          Yakin ingin Recovery anime <b>{{ uuidAnime?.nama }}?</b>
         </div>
 
         <div class="modal-footer">

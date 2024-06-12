@@ -1,8 +1,8 @@
 <script setup>
   import { ref, watchEffect } from 'vue';
+  import { toast } from 'vue-sonner';
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
-  import { toast } from 'vue-sonner';
   import FetchingAnime from '../../utils/handler-anime-fetching';
   import Cookies from '../../utils/handler-cookies';
   import FormatDate from '../../utils/handler-date';
@@ -26,13 +26,14 @@
     {
       data: 'data.nama_anime.romanji',
       title: 'Nama Anime',
-      width: '400px'
+      width: '500px'
     },
     {
       data: 'whois.username_mal',
       render: (data, type, row) => {
         return `<span class="badge badge-success">${data}</span>`
-      }
+      },
+      width: '200px'
     },
     {
       data: 'deleted_at',
@@ -122,6 +123,7 @@
                     </button>
                   </div>
                 </template>
+
                 <thead>
                   <tr>
                     <th>Action</th>
