@@ -93,9 +93,35 @@ const recoveryAnime = async (token, uuid) => {
   }
 }
 
+const syncAnimeById = async (token, data) => {
+  const headersSyncAnime = new Headers();
+  headersSyncAnime.append("Content-Type", "application/json");
+  headersSyncAnime.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: headersSyncAnime,
+    body: JSON.stringify({
+      animeUuid: data?.uuid,
+      animeIdMal: data?.idMal
+    }),
+    redirect: 'follow',
+  }
+
+  try {
+    const responseSync = await fetch(`${BASE_URL}/anime/sync-anime`, requestOptions);
+    const result = await responseSync.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createAnime,
   softDeleteAnime,
   showDeleteAnime,
   recoveryAnime,
+  syncAnimeById
 }
