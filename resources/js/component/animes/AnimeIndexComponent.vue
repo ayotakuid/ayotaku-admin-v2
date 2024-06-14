@@ -52,22 +52,46 @@
     {
       data: 'data.status',
       render: (data, type, row) => {
-        return `
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12">
-                <span class="badge badge-primary">
-                  ${data.statusAiring}
-                </span>
-              </div>
-              <div class="col-md-12">
-                <span class="badge badge-danger">
-                  ${data.total_eps} Episode
-                </span>
+        const text = data.statusAiring;
+        if (text.indexOf('_') === -1) {
+          return `
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <span class="badge badge-primary">
+                    ${text}
+                  </span>
+                </div>
+                <div class="col-md-12">
+                  <span class="badge badge-danger">
+                    ${data.total_eps} Episode
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        `
+          `
+        } else {
+          const splitText = text.split('_');
+          const mappingText = splitText.map((text) => {
+            return text.charAt(0).toUpperCase() + text.slice(1);
+          }).join(' ');
+          return `
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <span class="badge badge-primary">
+                    ${mappingText}
+                  </span>
+                </div>
+                <div class="col-md-12">
+                  <span class="badge badge-danger">
+                    ${data.total_eps} Episode
+                  </span>
+                </div>
+              </div>
+            </div>
+          `
+        }
       }
     },
     {
@@ -133,10 +157,28 @@
     dataAnime.value = data
   }
 
-  const handlerSyncAnimeToMal = (idAnime, namaAnime) => {
+  const handlerUpdateListAnime = (data) => {
+    const findData = dataAnime.value;
+    const resultFindIndex = findData.findIndex((item) => item.uuid === data[0].uuid);
+
+    if (resultFindIndex !== -1) {
+      findData[resultFindIndex].data.start_date = data[0]?.data?.start_date;
+      findData[resultFindIndex].data.end_date = data[0]?.data?.end_date;
+      findData[resultFindIndex].data.rating = data[0]?.data?.rating;
+      findData[resultFindIndex].data.status = data[0]?.data?.status;
+    }
+
+    if (resultFindIndex === -1) {
+      toast.error('Ada error')
+      return;
+    }
+  }
+
+  const handlerSyncAnimeToMal = (idAnime, idAnimeMal, namaAnime) => {
     animeSync.value = null
     animeSync.value = {
       uuid: idAnime,
+      idMal: idAnimeMal,
       nama: namaAnime,
     };
   };
@@ -213,7 +255,11 @@
                           class="dropdown-item sync"
                           data-bs-toggle="modal"
                           data-bs-target="#sync-anime"
-                          @click="handlerSyncAnimeToMal(props?.rowData?.uuid, props?.rowData?.data?.nama_anime?.romanji)"
+                          @click="handlerSyncAnimeToMal(
+                              props?.rowData?.uuid,
+                              props?.rowData?.data?.id_anime,
+                              props?.rowData?.data?.nama_anime?.romanji
+                            )"
                         >
                           Sync to MAL
                         </a>
@@ -276,6 +322,8 @@
             <!-- MODAL SYNC ANIME TO MAL -->
             <ModalSyncAnimeComponent 
               :dataAnime="animeSync"
+              :token="tokenAyotaku"
+              @updateListAnime="handlerUpdateListAnime"
             />
           </div>
         </div>
