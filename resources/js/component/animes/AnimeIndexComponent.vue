@@ -1,5 +1,5 @@
 <script setup>
-  import { onUpdated, ref, watchEffect } from 'vue';
+  import { ref, watchEffect } from 'vue';
   import { toast } from 'vue-sonner';
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
@@ -9,6 +9,7 @@
   import ModalImageComponent from './modal/ModalImageComponent.vue';
   import ModalDeleteAnimeComponent from './modal/ModalDeleteAnimeComponent.vue';
   import ModalSyncAnimeComponent from './modal/ModalSyncAnimeComponent.vue';
+  import ModalManualEditComponent from './modal/ModalManualEditComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -123,6 +124,7 @@
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const animeDelete = ref();
   const animeSync = ref();
+  const animeEdit = ref();
 
   watchEffect(async () => {
     const fetchingShowAnime = await Fetching.handlerFetchingShowAllAnime(tokenAyotaku);
@@ -157,6 +159,7 @@
     dataAnime.value = data
   }
 
+  // handler updating data after sync anime from myanimelist
   const handlerUpdateListAnime = (data) => {
     const findData = dataAnime.value;
     const resultFindIndex = findData.findIndex((item) => item.uuid === data[0].uuid);
@@ -182,6 +185,18 @@
       nama: namaAnime,
     };
   };
+
+  const handlerManualEdit = (idAnime, namaAnime, imageLink, videoLink) => {
+    animeEdit.value = null
+    animeEdit.value = {
+      uuid: idAnime,
+      nama: namaAnime,
+      url: {
+        image: imageLink,
+        video: videoLink,
+      }
+    };
+  }
 </script>
 
 <template>
@@ -275,7 +290,17 @@
                         </a>
                       </li>
                       <li>
-                        <a class="dropdown-item edit">
+                        <a 
+                          class="dropdown-item edit"
+                          data-bs-toggle="modal"
+                          data-bs-target="#manual-edits"
+                          @click="handlerManualEdit(
+                            props?.rowData?.uuid,
+                            props?.rowData?.data?.nama_anime?.romanji,
+                            props?.rowData?.data?.foto_anime,
+                            props?.rowData?.data?.video
+                          )"
+                        >
                           Manual Edits
                         </a>
                       </li>
@@ -324,6 +349,11 @@
               :dataAnime="animeSync"
               :token="tokenAyotaku"
               @updateListAnime="handlerUpdateListAnime"
+            />
+
+            <!-- MODAL MANUAL EDIT ANIME -->
+            <ModalManualEditComponent 
+              :dataEdit="animeEdit"
             />
           </div>
         </div>
