@@ -270,6 +270,12 @@
                 <template #action="props">
                   <div class="btn-group dropstart justify-content-center">
                     <button 
+                      class="btn btn-light-success btn-icon rounded mt-1 btn-sm"
+                      v-tooltip.right="'Add Episode'"
+                    >
+                      <i class="fa-solid fa-plus fs-3"></i>
+                    </button>
+                    <button 
                       class="btn btn-light-warning btn-icon rounded mx-3 mt-1 btn-sm" 
                       type="button" 
                       data-bs-toggle="dropdown" 
