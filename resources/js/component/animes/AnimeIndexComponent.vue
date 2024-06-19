@@ -159,7 +159,7 @@
     dataAnime.value = data
   }
 
-  // handler updating data after sync anime from myanimelist
+  // handler updating data after sync anime from myanimelist and manual edit photo/video 
   const handlerUpdateListAnime = (data) => {
     const findData = dataAnime.value;
     const resultFindIndex = findData.findIndex((item) => item.uuid === data[0].uuid);
@@ -173,6 +173,21 @@
 
     if (resultFindIndex === -1) {
       toast.error('Ada error')
+      return;
+    }
+  }
+
+  const handlerUpdateListAfterEdit = (data) => {
+    const findData = dataAnime.value;
+    const resultFindIndex = findData.findIndex((item) => item.uuid === data[0].uuid);
+
+    if (resultFindIndex !== -1) {
+      findData[resultFindIndex].data.foto_anime = data[0]?.data?.foto_anime;
+      findData[resultFindIndex].data.video = data[0]?.data?.video;
+    }
+
+    if (resultFindIndex === -1) {
+      toast.error('Ada error');
       return;
     }
   }
@@ -354,6 +369,8 @@
             <!-- MODAL MANUAL EDIT ANIME -->
             <ModalManualEditComponent 
               :dataEdit="animeEdit"
+              :token="tokenAyotaku"
+              @updateListAnime="handlerUpdateListAfterEdit"
             />
           </div>
         </div>

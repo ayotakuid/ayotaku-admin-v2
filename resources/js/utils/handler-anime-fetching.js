@@ -118,10 +118,37 @@ const syncAnimeById = async (token, data) => {
   }
 }
 
+const manualEditAnime = async (token, data) => {
+  const headerManualEditAnime = new Headers();
+  headerManualEditAnime.append("Content-Type", "application/json");
+  headerManualEditAnime.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: headerManualEditAnime,
+    body: JSON.stringify({
+      animeUuid: data?.uuid,
+      imageUrl: data?.image,
+      videoUrl: data?.video,
+    }),
+    redirect: 'follow',
+  }
+
+  try {
+    const responseManual = await fetch(`${BASE_URL}/anime/manual-edit`, requestOptions);
+    const result = await responseManual.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createAnime,
   softDeleteAnime,
   showDeleteAnime,
   recoveryAnime,
-  syncAnimeById
+  syncAnimeById,
+  manualEditAnime
 }

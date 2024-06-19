@@ -1,24 +1,54 @@
 <script setup>
   import { ref, watchEffect } from 'vue';
+  import FetchingAnime from '../../../utils/handler-anime-fetching';
+import { toast } from 'vue-sonner';
 
-  const props = defineProps(['dataEdit']);
+  const props = defineProps(['dataEdit', 'token']);
+  const emitData = defineEmits(['updateListAnime']);
   const stateForm = ref({
     image: null,
     video: null,
   });
-  const dataAnime = ref()
+  const dataAnime = ref();
+  const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
 
   watchEffect(() => {
     dataAnime.value = {
       uuid: props.dataEdit?.uuid,
-      nama: props.dataEdit?.nama
+      nama: props.dataEdit?.nama,
+      tokenAyotaku: props.token,
     }
 
     stateForm.value = {
+      uuid: props.dataEdit?.uuid,
       image: props.dataEdit?.url?.image,
       video: props.dataEdit?.url?.video
     }
   })
+
+  const handlerClickManualEdit = async () => {
+    const token = dataAnime.value?.tokenAyotaku;
+    const responseFetchingEdit = await FetchingAnime.manualEditAnime(token, stateForm.value);
+
+    if (responseFetchingEdit.status) {
+      if (responseFetchingEdit.status === 'fail') {
+        toast.error(responseFetchingEdit.message);
+        return;
+      }
+
+      if (responseFetchingEdit.status === 'success') {
+        toast.promise((promise), {
+          loading: 'Loading...',
+          success: () => {
+            emitData('updateListAnime', responseFetchingEdit.data);
+            return 'Berhasil edit video/foto anime!';
+          },
+          error: 'ERROR',
+        });
+        return;
+      }
+    }
+  }
 </script>
 
 <template>
@@ -76,6 +106,7 @@
             class="btn btn-success btn-sm"
             data-bs-dismiss="modal"
             aria-label="Close"
+            @click="handlerClickManualEdit"
           >
             Save Change
           </button>
