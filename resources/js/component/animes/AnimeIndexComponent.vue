@@ -10,6 +10,7 @@
   import ModalDeleteAnimeComponent from './modal/ModalDeleteAnimeComponent.vue';
   import ModalSyncAnimeComponent from './modal/ModalSyncAnimeComponent.vue';
   import ModalManualEditComponent from './modal/ModalManualEditComponent.vue';
+  import ModalAddEpisodeComponent from './modal/ModalAddEpisodeComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -125,6 +126,7 @@
   const animeDelete = ref();
   const animeSync = ref();
   const animeEdit = ref();
+  const animeAdd = ref();
 
   watchEffect(async () => {
     const fetchingShowAnime = await Fetching.handlerFetchingShowAllAnime(tokenAyotaku);
@@ -212,6 +214,11 @@
       }
     };
   }
+  
+  const handlerAddEpisode = (dataAnime) => {
+    animeAdd.value = null
+    animeAdd.value = dataAnime
+  }
 </script>
 
 <template>
@@ -272,6 +279,12 @@
                     <button 
                       class="btn btn-light-success btn-icon rounded mt-1 btn-sm"
                       v-tooltip.right="'Add Episode'"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#add-episode"
+                      @click="handlerAddEpisode(
+                        props?.rowData
+                      )"
                     >
                       <i class="fa-solid fa-plus fs-3"></i>
                     </button>
@@ -377,6 +390,11 @@
               :dataEdit="animeEdit"
               :token="tokenAyotaku"
               @updateListAnime="handlerUpdateListAfterEdit"
+            />
+
+            <ModalAddEpisodeComponent 
+              :dataAnime="animeAdd"
+              :token="tokenAyotaku"
             />
           </div>
         </div>
