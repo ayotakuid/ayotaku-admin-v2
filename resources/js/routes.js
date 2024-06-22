@@ -2,6 +2,7 @@ import DashboardComponent from './component/DashboardComponent.vue';
 import AnimeIndexComponent from './component/animes/AnimeIndexComponent.vue';
 import CreateAnimeComponent from './component/animes/CreateAnimeComponent.vue';
 import RecoveryAnimeComponent from './component/animes/RecoveryAnimeComponent.vue';
+import EpisodeIndexComponent from './component/animes/EpisodeIndexComponent.vue';
 
 const routes = [
   {
@@ -36,6 +37,14 @@ const routes = [
     path: '/anime/recovery-anime',
     name: 'recovery-anime-component',
     component: RecoveryAnimeComponent,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/anime/episode',
+    name: 'episode-anime-component',
+    component: EpisodeIndexComponent,
     meta: {
       requiresAuth: true
     }
