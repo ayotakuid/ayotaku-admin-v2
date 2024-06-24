@@ -22,6 +22,28 @@ const createEpisode = async (token, data) => {
   }
 }
 
+const showAllEpisode = async (token) => {
+  const headersShowEpisode = new Headers();
+  headersShowEpisode.append("Content-Type", "application/json");
+  headersShowEpisode.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: headersShowEpisode,
+    redirect: 'follow'
+  };
+
+  try {
+    const showEpisode = await fetch(`${BASE_URL}/anime/episode/all`, requestOptions);
+    const result = await showEpisode.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createEpisode,
+  showAllEpisode,
 }

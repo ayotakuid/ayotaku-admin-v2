@@ -1,4 +1,13 @@
 <script setup>
+  import { ref, watchEffect } from 'vue';
+  import { toast } from 'vue-sonner';
+  import DataTable from 'datatables.net-vue3';
+  import DataTablesCore from 'datatables.net';
+  import FetchingEpisode from '../../utils/handler-episode-fetching';
+  import Cookies from '../../utils/handler-cookies';
+
+  DataTable.use(DataTablesCore);
+
   // SETTING TITLE FOR PAGE
   const data = [
     {
@@ -7,8 +16,74 @@
     },
   ];
 
+  const columns = [
+    {
+      data: 'uuid',
+      render: '#action',
+      orderable: false,
+      width: '50px'
+    },
+    {
+      data: 'animes.judul_anime',
+      width: '250px'
+    },
+    {
+      data: 'episode',
+      width: '250px'
+    },
+    {
+      data: 'link_stream',
+      render: (data, type, row) => {
+        const resol720 = (data.resol720 !== '' || data.resol720 != null) ? '<span class="badge badge-success">Link 720 Ready</span>' : '<span class="badge badge-danger">Link 720 Not Ready</span>';
+        const resol1080 = (data.resol1080 !== '' || data.resol1080 != null) ? '<span class="badge badge-success">Link 1080 Ready</span>' : '<span class="badge badge-danger">Link 1080 Not Ready</span>' 
+        return `${resol720} ${resol1080}`
+      },
+      width: '250px'
+    },
+    {
+      data: 'link_download',
+      render: (data, type, row) => {
+        const resol720 = (data.resol720 !== '' || data.resol720 != null) ? '<span class="badge badge-success">Link 720 Ready</span>' : '<span class="badge badge-danger">Link 720 Not Ready</span>';
+        const resol1080 = (data.resol1080 !== '' || data.resol1080 != null) ? '<span class="badge badge-success">Link 1080 Ready</span>' : '<span class="badge badge-danger">Link 1080 Not Ready</span>' 
+        return `${resol720} ${resol1080}`
+      },
+      width: '250px'
+    },
+    {
+      data: '',
+      render: (data, type, row) => {
+        return 'b'
+      },
+      width: '250px'
+    },
+    {
+      data: '',
+      render: (data, type, row) => {
+        return 'b'
+      },
+      width: '250px'
+    },
+  ]
+
+  const dataDataTable = ref();
+  const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const emit = defineEmits(['parents'])
   emit('parents', data)
+
+  watchEffect(async () => {
+    const fetchingEpisodeAnime = await FetchingEpisode.showAllEpisode(tokenAyotaku);
+
+    if (fetchingEpisodeAnime.status) {
+      if (fetchingEpisodeAnime.status === 'success') {
+        dataDataTable.value = fetchingEpisodeAnime?.data
+      }
+
+      if (!fetchingEpisodeAnime.status || fetchingEpisodeAnime.status === 'fail') {
+        toast.error('Gagal fetching data anime');
+        return
+      }
+    }
+  })
 </script>
 
 <template>
@@ -27,12 +102,40 @@
               </router-link>
             </div>
 
-            <div class="col-md-12">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vero esse accusamus voluptates quisquam porro sit ipsa adipisci impedit quam cum laborum quod praesentium consequuntur sapiente nihil error quas, quibusdam iusto.
-              Adipisci, quasi at. Dignissimos laborum tempore asperiores? Eligendi corporis doloremque obcaecati repudiandae enim eveniet autem in dolorem, similique illo repellendus cupiditate voluptate dolores eum veritatis officiis minus libero, quia vel.
-              Et mollitia ab voluptates exercitationem expedita corporis magni totam consectetur ipsa, dicta id reprehenderit autem consequatur rem tempore, in distinctio? Eos autem voluptas eum tempore, reiciendis doloribus nesciunt aperiam maxime?
-              Officia excepturi, obcaecati error atque repudiandae impedit totam, doloremque facilis tenetur non dolorum deserunt minus? Hic commodi non eos excepturi nihil. Provident eius aliquam incidunt in veritatis esse explicabo modi.
-              Voluptates sint esse, deserunt quidem inventore deleniti fuga iusto suscipit obcaecati totam odit exercitationem eos perspiciatis quas optio possimus nam nostrum dolorum repudiandae porro vero. Vel voluptatibus neque dicta libero?
+            <div class="col-md-12 my-2">
+              <DataTable
+                :columns="columns"
+                :data="dataDataTable"
+                class="table table-striped table-row-bordered gy-5 gs-7 border rounded"
+                width="100%"
+                :options="{
+                  responsive: true,
+                  processing: true,
+                  pageLength: 10,
+                  lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, 'All'] ],
+                  scrollX: true,
+                  order: [[0]],
+                  fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 0
+                  },
+                }"
+              >
+                <template #action="props">
+                  {{ props.rowData?.uuid }}
+                </template>
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Nama Anime</th>
+                    <th>Episode</th>
+                    <th>Stream</th>
+                    <th>Download</th>
+                    <th>Admin</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+              </DataTable>
             </div>
           </div>
         </div>
