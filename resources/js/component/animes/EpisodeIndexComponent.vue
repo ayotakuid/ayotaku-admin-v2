@@ -5,6 +5,7 @@
   import DataTablesCore from 'datatables.net';
   import FetchingEpisode from '../../utils/handler-episode-fetching';
   import Cookies from '../../utils/handler-cookies';
+  import FormatDate from '../../utils/handler-date';
 
   DataTable.use(DataTablesCore);
 
@@ -29,37 +30,29 @@
     },
     {
       data: 'episode',
-      width: '250px'
+      width: '300px'
     },
     {
       data: 'link_stream',
-      render: (data, type, row) => {
-        const resol720 = (data.resol720 !== '' || data.resol720 != null) ? '<span class="badge badge-success">Link 720 Ready</span>' : '<span class="badge badge-danger">Link 720 Not Ready</span>';
-        const resol1080 = (data.resol1080 !== '' || data.resol1080 != null) ? '<span class="badge badge-success">Link 1080 Ready</span>' : '<span class="badge badge-danger">Link 1080 Not Ready</span>' 
-        return `${resol720} ${resol1080}`
-      },
+      render: '#stream',
+      orderable: false,
       width: '250px'
     },
     {
       data: 'link_download',
-      render: (data, type, row) => {
-        const resol720 = (data.resol720 !== '' || data.resol720 != null) ? '<span class="badge badge-success">Link 720 Ready</span>' : '<span class="badge badge-danger">Link 720 Not Ready</span>';
-        const resol1080 = (data.resol1080 !== '' || data.resol1080 != null) ? '<span class="badge badge-success">Link 1080 Ready</span>' : '<span class="badge badge-danger">Link 1080 Not Ready</span>' 
-        return `${resol720} ${resol1080}`
-      },
+      render: '#download',
+      orderable: false,
       width: '250px'
     },
     {
-      data: '',
-      render: (data, type, row) => {
-        return 'b'
-      },
+      data: 'whois.username_mal',
+      render: '#admin',
       width: '250px'
     },
     {
-      data: '',
+      data: 'createdAt',
       render: (data, type, row) => {
-        return 'b'
+        return FormatDate.formatDateOnline(data)
       },
       width: '250px'
     },
@@ -114,6 +107,7 @@
                   pageLength: 10,
                   lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, 'All'] ],
                   scrollX: true,
+                  scrollY: '570px',
                   order: [[0]],
                   fixedColumns: {
                     leftColumns: 1,
@@ -122,8 +116,77 @@
                 }"
               >
                 <template #action="props">
-                  {{ props.rowData?.uuid }}
+                  <div class="btn-group dropstart justify-content-center">
+                      <button
+                        class="btn btn-light-warning btn-icon rounded mx-3 mt-1 btn-sm"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        data-bs-offset="-5,40"
+                        v-tooltip.right="'Options'"
+                      >
+                        <i class="fa-solid fa-ellipsis-vertical fs-3"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a
+                            class="dropdown-item"
+                          >
+                            {{ props.rowData?.uuid }}
+                          </a>
+                        </li>
+                      </ul>
+                  </div>
                 </template>
+
+                <template #stream="props">
+                  <span 
+                    class="badge mx-1 text-center fs-7" 
+                    :class="{ 
+                      'badge-danger': !props.rowData?.link_stream?.resol720,
+                      'badge-primary': props.rowData?.link_stream?.resol720
+                    }"
+                  >
+                    Stream 720
+                  </span>
+
+                  <span 
+                    class="badge mx-1 text-center fs-7" 
+                    :class="{ 
+                      'badge-danger': !props.rowData?.link_stream?.resol1080,
+                      'badge-primary': props.rowData?.link_stream?.resol1080
+                    }"
+                  >
+                    Stream 1080
+                  </span>
+                </template>
+
+                <template #download="props">
+                  <span 
+                    class="badge mx-1 text-center fs-7" 
+                    :class="{ 
+                      'badge-danger': !props.rowData?.link_download?.resol720,
+                      'badge-primary': props.rowData?.link_download?.resol720
+                    }"
+                  >
+                    Stream 720
+                  </span>
+
+                  <span 
+                    class="badge mx-1 text-center fs-7" 
+                    :class="{ 
+                      'badge-danger': !props.rowData?.link_download?.resol1080,
+                      'badge-primary': props.rowData?.link_download?.resol1080
+                    }"
+                  >
+                    Stream 1080
+                  </span>
+                </template>
+
+                <template #admin="props">
+                  <span class="badge badge-success fs-7">{{ props.rowData?.whois?.username_mal }}</span>
+                </template>
+
                 <thead>
                   <tr>
                     <th>Action</th>
