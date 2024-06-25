@@ -6,6 +6,7 @@
   import FetchingEpisode from '../../utils/handler-episode-fetching';
   import Cookies from '../../utils/handler-cookies';
   import FormatDate from '../../utils/handler-date';
+  import ModalShowEpisodeComponent from '../animes/modal/ModalShowEpisodeComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -59,6 +60,7 @@
   ]
 
   const dataDataTable = ref();
+  const dataModalShow = ref();
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const emit = defineEmits(['parents'])
   emit('parents', data)
@@ -77,6 +79,11 @@
       }
     }
   })
+
+  const handlerClickShowEpisode = (data) => {
+    dataModalShow.value = null;
+    dataModalShow.value = data
+  }
 </script>
 
 <template>
@@ -128,6 +135,26 @@
                         <i class="fa-solid fa-ellipsis-vertical fs-3"></i>
                       </button>
                       <ul class="dropdown-menu">
+                        <li>
+                          <a
+                            class="dropdown-item"
+                          >
+                            Edit
+                          </a>
+                          <a
+                            class="dropdown-item"
+                          >
+                            Delete
+                          </a>
+                          <a
+                            class="dropdown-item"
+                            data-bs-toggle="modal"
+                            data-bs-target="#show-episode"
+                            @click="handlerClickShowEpisode(props.rowData)"
+                          >
+                            Show Stream
+                          </a>
+                        </li>
                         <li>
                           <a
                             class="dropdown-item"
@@ -200,6 +227,10 @@
                 </thead>
               </DataTable>
             </div>
+
+            <ModalShowEpisodeComponent 
+              :dataEpisode="dataModalShow"
+            />
           </div>
         </div>
       </div>
