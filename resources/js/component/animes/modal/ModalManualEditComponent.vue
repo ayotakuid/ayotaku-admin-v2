@@ -1,7 +1,7 @@
 <script setup>
   import { ref, watchEffect } from 'vue';
+  import { toast } from 'vue-sonner';
   import FetchingAnime from '../../../utils/handler-anime-fetching';
-import { toast } from 'vue-sonner';
 
   const props = defineProps(['dataEdit', 'token']);
   const emitData = defineEmits(['updateListAnime']);
