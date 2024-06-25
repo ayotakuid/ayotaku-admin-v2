@@ -28,8 +28,9 @@
 
   const handlerSaveEpisodeAnime = async () => {
     const token = tokenAyotaku.value;
+    const idAdmin = JSON.parse(localStorage.getItem('infoLogin')).id;
     dataEpisode.value.uuidAnime = dataAnime.value.uuid;
-    dataEpisode.value.uuidAdmin = dataAnime.value.id_admin;
+    dataEpisode.value.uuidAdmin = (!idAdmin) ? dataAnime.value.id_admin : idAdmin;
 
     if (
         dataEpisode.value.episode === "Episode " 
