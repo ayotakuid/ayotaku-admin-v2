@@ -17,38 +17,48 @@
 
         <div class="modal-body">
           <div class="container">
-            <div class="row">
-              <div class="col-md-12 fs-1 mb-5">
+            <div class="row d-flex">
+              <div class="col-md-12 fs-1 mb-5 justify-content-center">
                 {{ renderEpisode?.animes?.judul_anime }} - {{ renderEpisode?.episode }}
               </div>
 
-              <label for="Resolusi 720" class="form-label fs-4">Resolusi 720:</label>
-              <div class="col-md-12">
-                <iframe 
-                  :src="renderEpisode?.link_stream?.resol720" 
-                  frameborder="0"
-                  marginwidth="0"
-                  marginheight="0"
-                  scrolling="no"
-                  width="400"
-                  height="200"
-                  allowfullscreen="true"
-                  class="rounded align-item-center"
-                />
+              <div class="col-md-6">
+                <div class="card">
+                  <iframe 
+                    :src="renderEpisode?.link_stream?.resol720" 
+                    frameborder="0"
+                    marginwidth="0"
+                    marginheight="0"
+                    scrolling="no"
+                    width="400"
+                    height="200"
+                    allowfullscreen="true"
+                    class="card-img-top"
+                  />
+                  <div class="card-body">
+                    <h5 class="card-title">Revolusi 720p - {{ renderEpisode?.episode }}</h5>
+                    <a :href="renderEpisode?.link_download?.resol720" class="btn btn-primary btn-sm">Download Button</a>
+                  </div>
+                </div>
               </div>
-              <label for="Resolusi 1080" class="form-label fs-4">Resolusi 1080:</label>
-              <div class="col-md-12">
-                <iframe 
-                  :src="renderEpisode?.link_stream?.resol1080" 
-                  frameborder="0"
-                  marginwidth="0"
-                  marginheight="0"
-                  scrolling="no"
-                  width="400"
-                  height="200"
-                  allowfullscreen="true"
-                  class="rounded align-item-center"
-                />
+              <div class="col-md-6">
+                <div class="card">
+                  <iframe 
+                    :src="renderEpisode?.link_stream?.resol1080" 
+                    frameborder="0"
+                    marginwidth="0"
+                    marginheight="0"
+                    scrolling="no"
+                    width="400"
+                    height="200"
+                    allowfullscreen="true"
+                    class="card-img-top"
+                  />
+                  <div class="card-body">
+                    <h5 class="card-title">Revolusi 1080p - {{ renderEpisode?.episode }}</h5>
+                    <a :href="renderEpisode?.link_download?.resol1080" class="btn btn-primary btn-sm">Download Button</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -60,6 +70,9 @@
             class="btn btn-secondary btn-sm"
             data-bs-dismiss="modal"
             aria-label="Close"
+            @click="() => {
+              renderEpisode = null
+            }"
           >
             Close
           </button>
