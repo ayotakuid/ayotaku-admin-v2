@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import Fetching from '../../utils/handler-fetching';
 import FormatDate from '../../utils/handler-date';
+import { toast } from 'vue-sonner';
 
 const dataSchedule = ref(null);
 const weeklySchedule = ref({});
@@ -9,6 +10,12 @@ const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
 onMounted(async () => {
   const responseSchedule = await Fetching.handlerFethcingScheduleWeek();
+
+  if (responseSchedule.message === 'Schedule Error!') {
+    toast.error('Schedule Error!');
+    return;
+  }
+
   dataSchedule.value = responseSchedule
   days.forEach((day) => {
     weeklySchedule.value[day] = dataSchedule.value[day];
