@@ -109,11 +109,19 @@
           <div class="row">
             <div class="col-md-12 my-2 d-flex justify-content-end">
               <router-link 
-                to="/" 
+                to="/anime" 
                 class="btn btn-primary btn-sm btn-icon"
-                v-tooltip.bottom-end="'Back to dashboard'"
+                v-tooltip.bottom-end="'Back to anime'"
               >
                 <i class="fa-solid fa-arrow-left"></i>
+              </router-link>
+
+              <router-link
+                to="/anime/episode/recovery-episode"
+                class="btn btn-warning btn-sm mx-2 btn-icon"
+                v-tooltip.bottom-end="'Recovery Episode'"
+              >
+                <i class="fa-solid fa-rotate-left"></i>
               </router-link>
             </div>
 
