@@ -5,7 +5,7 @@
   const props = defineProps(['dataEpisode']);
   const renderEpisode = ref();
 
-  watchEffect(async () => {
+  watchEffect(() => {
     renderEpisode.value = props.dataEpisode;
   })
 </script>
@@ -70,9 +70,6 @@
             class="btn btn-secondary btn-sm"
             data-bs-dismiss="modal"
             aria-label="Close"
-            @click="() => {
-              renderEpisode = null
-            }"
           >
             Close
           </button>
