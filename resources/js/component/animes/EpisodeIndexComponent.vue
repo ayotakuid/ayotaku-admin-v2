@@ -7,6 +7,7 @@
   import Cookies from '../../utils/handler-cookies';
   import FormatDate from '../../utils/handler-date';
   import ModalShowEpisodeComponent from '../animes/modal/ModalShowEpisodeComponent.vue';
+  import ModalDeleteEpisodeComponent from '../animes/modal/ModalDeleteEpisodeComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -61,6 +62,7 @@
 
   const dataDataTable = ref();
   const dataModalShow = ref();
+  const episodeDelete = ref();
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const emit = defineEmits(['parents'])
   emit('parents', data)
@@ -83,6 +85,19 @@
   const handlerClickShowEpisode = (data) => {
     dataModalShow.value = null;
     dataModalShow.value = data
+  }
+
+  const handlerClickDeleteEpisode = (uuidEpisode, episode, namaAnime) => {
+    episodeDelete.value = null;
+    episodeDelete.value = {
+      uuid: uuidEpisode,
+      episode: episode,
+      nama: namaAnime,
+    };
+  };
+
+  const handlerReceiveAfterDelete = (data) => {
+    dataDataTable.value = data
   }
 </script>
 
@@ -143,6 +158,13 @@
                           </a>
                           <a
                             class="dropdown-item"
+                            data-bs-toggle="modal"
+                            data-bs-target="#delete-episode"
+                            @click="handlerClickDeleteEpisode(
+                              props.rowData?.uuid,
+                              props.rowData?.episode,
+                              props.rowData?.animes?.judul_anime
+                            )"
                           >
                             Delete
                           </a>
@@ -153,13 +175,6 @@
                             @click="handlerClickShowEpisode(props.rowData)"
                           >
                             Show Stream
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item"
-                          >
-                            {{ props.rowData?.uuid }}
                           </a>
                         </li>
                       </ul>
@@ -230,6 +245,12 @@
 
             <ModalShowEpisodeComponent 
               :dataEpisode="dataModalShow"
+            />
+
+            <ModalDeleteEpisodeComponent 
+              :dataEpisode="episodeDelete"
+              :token="tokenAyotaku"
+              @updateListEpisode="handlerReceiveAfterDelete"
             />
           </div>
         </div>

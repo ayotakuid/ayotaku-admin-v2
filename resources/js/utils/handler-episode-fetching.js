@@ -43,7 +43,34 @@ const showAllEpisode = async (token) => {
   }
 }
 
+const softDeleteEpisode = async (token, data) => {
+  const headerSoftDelete = new Headers();
+  headerSoftDelete.append("Content-Type", "application/json");
+  headerSoftDelete.append("Authorization", `Bearer ${token}`);
+
+  const dataBody = JSON.stringify({
+    episodeUuid: data,
+  });
+
+  const requestOptions = {
+    method: "DELETE",
+    headers: headerSoftDelete,
+    body: dataBody,
+    redirect: "follow"
+  };
+
+  try {
+    const softDeleteEpisode = await fetch(`${BASE_URL}/anime/episode/delete`, requestOptions);
+    const result = await softDeleteEpisode.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export default {
   createEpisode,
   showAllEpisode,
+  softDeleteEpisode,
 }
