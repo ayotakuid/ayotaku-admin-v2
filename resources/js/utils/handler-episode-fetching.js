@@ -69,8 +69,55 @@ const softDeleteEpisode = async (token, data) => {
   }
 };
 
+const showDeleteEpisode = async (token) => {
+  const headersShowDelete = new Headers();
+  headersShowDelete.append("Content-Type", "application/json");
+  headersShowDelete.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: headersShowDelete,
+    redirect: 'follow',
+  };
+
+  try {
+    const showDelete = await fetch(`${BASE_URL}/anime/episode/delete`, requestOptions);
+    const result = await showDelete.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+const recoveryEpisode = async (token, uuid) => {
+  const headersRecovery = new Headers();
+  headersRecovery.append("Content-Type", "application/json");
+  headersRecovery.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: headersRecovery,
+    body: JSON.stringify({
+      episodeUuid: uuid,
+    }),
+    redirect: 'follow',
+  }
+
+  try {
+    const recoveryEpisode = await fetch(`${BASE_URL}/anime/episode/recovery`, requestOptions);
+    const result = await recoveryEpisode.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createEpisode,
   showAllEpisode,
   softDeleteEpisode,
+  showDeleteEpisode,
+  recoveryEpisode
 }
