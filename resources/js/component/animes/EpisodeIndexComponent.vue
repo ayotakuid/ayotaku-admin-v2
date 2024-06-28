@@ -8,6 +8,7 @@
   import FormatDate from '../../utils/handler-date';
   import ModalShowEpisodeComponent from '../animes/modal/ModalShowEpisodeComponent.vue';
   import ModalDeleteEpisodeComponent from '../animes/modal/ModalDeleteEpisodeComponent.vue';
+  import ModalEditEpisodeComponent from '../animes/modal/ModalEditEpisodeComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -161,6 +162,8 @@
                         <li>
                           <a
                             class="dropdown-item"
+                            data-bs-toggle="modal"
+                            data-bs-target="#edit-episode"
                           >
                             Edit
                           </a>
@@ -260,6 +263,8 @@
               :token="tokenAyotaku"
               @updateListEpisode="handlerReceiveAfterDelete"
             />
+
+            <ModalEditEpisodeComponent />
           </div>
         </div>
       </div>
