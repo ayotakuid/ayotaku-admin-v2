@@ -1,7 +1,7 @@
 <script setup>
   import { ref, watchEffect } from 'vue';
+  import { toast } from 'vue-sonner';
   import FetchingEpisode from '../../../utils/handler-episode-fetching';
-import { toast } from 'vue-sonner';
 
   const props = defineProps(['dataEpisode', 'token']);
   const emitData = defineEmits(['updateListRecovery']);
