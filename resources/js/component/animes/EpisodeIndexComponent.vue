@@ -64,6 +64,7 @@
   const dataDataTable = ref();
   const dataModalShow = ref();
   const episodeDelete = ref();
+  const episodeEdit = ref();
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const emit = defineEmits(['parents'])
   emit('parents', data)
@@ -96,6 +97,11 @@
       nama: namaAnime,
     };
   };
+
+  const handlerClickEditEpisode = (dataEpisode) => {
+    episodeEdit.value = null;
+    episodeEdit.value = dataEpisode;
+  }
 
   const handlerReceiveAfterDelete = (data) => {
     dataDataTable.value = data
@@ -164,6 +170,7 @@
                             class="dropdown-item"
                             data-bs-toggle="modal"
                             data-bs-target="#edit-episode"
+                            @click="handlerClickEditEpisode(props.rowData)"
                           >
                             Edit
                           </a>
@@ -264,7 +271,10 @@
               @updateListEpisode="handlerReceiveAfterDelete"
             />
 
-            <ModalEditEpisodeComponent />
+            <ModalEditEpisodeComponent 
+              :dataEpisode="episodeEdit"
+              :token="tokenAyotaku"
+            />
           </div>
         </div>
       </div>
