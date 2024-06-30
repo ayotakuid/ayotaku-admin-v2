@@ -106,6 +106,22 @@
   const handlerReceiveAfterDelete = (data) => {
     dataDataTable.value = data
   }
+
+  const handlerReceiveAfterEdit = (data) => {
+    const findData = dataDataTable.value;
+    const resultFindINdex = findData.findIndex((item) => item.uuid === data[0].uuid);
+
+    if (resultFindINdex !== -1) {
+      findData[resultFindINdex].episode = data[0].episode;
+      findData[resultFindINdex].link_stream = data[0].link_stream;
+      findData[resultFindINdex].link_download = data[0].link_download;
+    }
+
+    if (resultFindINdex === -1) {
+      toast.error('Ada error');
+      return;
+    }
+  }
 </script>
 
 <template>
@@ -274,6 +290,7 @@
             <ModalEditEpisodeComponent 
               :dataEpisode="episodeEdit"
               :token="tokenAyotaku"
+              @updateListEpisode="handlerReceiveAfterEdit"
             />
           </div>
         </div>

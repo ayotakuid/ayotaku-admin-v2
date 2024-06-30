@@ -1,30 +1,35 @@
 <script setup>
   import { ref, watchEffect } from 'vue';
-import { toast } from 'vue-sonner';
+  import { toast } from 'vue-sonner';
+  import FetchingEpisode from '../../../utils/handler-episode-fetching';
 
   const props = defineProps(['dataEpisode', 'token']);
+  const emitData = defineEmits(['updateListEpisode']);
   const headerData = ref();
   const currentEpisode = ref();
+  const tokenAyotaku = ref();
   const stateForm = ref({
     episode: '',
-    stream: {
+    link_stream: {
       resol720: '',
       resol1080: ''
     },
-    download: {
+    link_download: {
       resol720: '',
       resol1080: ''
     }
-  })
+  });
+  const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
 
   watchEffect(() => {
     currentEpisode.value = props.dataEpisode?.episode;
+    tokenAyotaku.value = props.token;
 
     stateForm.value.episode = props.dataEpisode?.episode;
-    stateForm.value.stream.resol720 = props.dataEpisode?.link_stream?.resol720;
-    stateForm.value.stream.resol1080 = props.dataEpisode?.link_stream?.resol1080;
-    stateForm.value.download.resol720 = props.dataEpisode?.link_download?.resol720;
-    stateForm.value.download.resol1080 = props.dataEpisode?.link_download?.resol1080;
+    stateForm.value.link_stream.resol720 = props.dataEpisode?.link_stream?.resol720;
+    stateForm.value.link_stream.resol1080 = props.dataEpisode?.link_stream?.resol1080;
+    stateForm.value.link_download.resol720 = props.dataEpisode?.link_download?.resol720;
+    stateForm.value.link_download.resol1080 = props.dataEpisode?.link_download?.resol1080;
 
     headerData.value = {
       nama: props.dataEpisode?.animes?.judul_anime,
@@ -36,21 +41,43 @@ import { toast } from 'vue-sonner';
     currentEpisode.value = ''
     stateForm.value = {
       episode: '',
-      stream: {
+      link_stream: {
         resol720: '',
         resol1080: ''
       },
-      download: {
+      link_download: {
         resol720: '',
         resol1080: ''
       }
     }
   }
 
-  const handlerUpdateEpisode = () => {
-    const checkingSlug = (stateForm.value.episode !== currentEpisode.value) ? '1' : '0'
-    toast.error(checkingSlug);
-    handlerClearState()
+  const handlerUpdateEpisode = async () => {
+    const checkingSlug = (stateForm.value.episode !== currentEpisode.value) ? '1' : '0';
+    const token = tokenAyotaku.value;
+
+    const responseFetchingEdit = await FetchingEpisode.editEpisode(token, props.dataEpisode?.uuid, stateForm.value, checkingSlug);
+
+    if (responseFetchingEdit.status) {
+      if (responseFetchingEdit.status === 'fail') {
+        toast.error(responseFetchingEdit.message);
+        handlerClearState();
+        return
+      }
+
+      if (responseFetchingEdit.status === 'success') {
+        toast.promise((promise), {
+          loading: 'Loading...',
+          success: () => {
+            emitData('updateListEpisode', responseFetchingEdit.data);
+            handlerClearState();
+            return 'Berhasil edit episode';
+          },
+          error: 'ERROR',
+        });
+        return;
+      }
+    }
     return;
   }
 </script>
@@ -97,7 +124,7 @@ import { toast } from 'vue-sonner';
                     type="text"
                     class="form-control form-control-solid"
                     placeholder="Stream 720p..."
-                    v-model="stateForm.stream.resol720"
+                    v-model="stateForm.link_stream.resol720"
                   />
                 </div>
               </div>
@@ -113,7 +140,7 @@ import { toast } from 'vue-sonner';
                     type="text"
                     class="form-control form-control-solid"
                     placeholder="Stream 1080p..."
-                    v-model="stateForm.stream.resol1080"
+                    v-model="stateForm.link_stream.resol1080"
                   />
                 </div>
               </div>
@@ -129,7 +156,7 @@ import { toast } from 'vue-sonner';
                     type="text"
                     class="form-control form-control-solid"
                     placeholder="Download 720p..."
-                    v-model="stateForm.download.resol720"
+                    v-model="stateForm.link_download.resol720"
                   />
                 </div>
               </div>
@@ -145,7 +172,7 @@ import { toast } from 'vue-sonner';
                     type="text"
                     class="form-control form-control-solid"
                     placeholder="Download 1080p..."
-                    v-model="stateForm.download.resol1080"
+                    v-model="stateForm.link_download.resol1080"
                   />
                 </div>
               </div>

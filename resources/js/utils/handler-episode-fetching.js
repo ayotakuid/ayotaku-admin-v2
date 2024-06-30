@@ -114,10 +114,37 @@ const recoveryEpisode = async (token, uuid) => {
   }
 }
 
+const editEpisode = async (token, uuid, dataEps, checking) => {
+  const headerEditEpisode = new Headers();
+  headerEditEpisode.append("Content-Type", "application/json");
+  headerEditEpisode.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: headerEditEpisode,
+    body: JSON.stringify({
+      episodeUuid: uuid,
+      dataEpisode: dataEps,
+      checkingEpisode: checking,
+    }),
+    redirect: 'follow',
+  };
+
+  try {
+    const responseEditEpisode = await fetch(`${BASE_URL}/anime/episode/edit`, requestOptions);
+    const result = await responseEditEpisode.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createEpisode,
   showAllEpisode,
   softDeleteEpisode,
   showDeleteEpisode,
-  recoveryEpisode
+  recoveryEpisode,
+  editEpisode,
 }
