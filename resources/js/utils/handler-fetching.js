@@ -1,5 +1,28 @@
 import { BASE_URL } from '../utils/others/config.json';
 
+const handlerCallbackLogin = async (code) => {
+  const headerCallbackLogin = new Headers();
+  headerCallbackLogin.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: 'POST',
+    headers: headerCallbackLogin,
+    body: JSON.stringify({
+      "code": code,
+    }),
+    redirect: 'follow',
+  };
+
+  try {
+    const responseFetchinCallback = await fetch(`${BASE_URL}/admin/callback`, requestOptions)
+    const result = await responseFetchinCallback.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 const checkingToken = async (token) => {
   const headersCheckingToken = new Headers();
   headersCheckingToken.append("Content-Type", "application/json");
@@ -193,6 +216,7 @@ const handlerFetchingShowAllAnime = async (token) => {
 }
 
 export default {
+  handlerCallbackLogin,
   checkingToken,
   handlerFetchingSignOut,
   handlerFetchingProfile,

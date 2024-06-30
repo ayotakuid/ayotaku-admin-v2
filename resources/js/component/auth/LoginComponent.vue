@@ -5,6 +5,8 @@
   import LogoMyanimelist from '../../../../public/assets/media/ayotaku/Tulisan MyAnimeList.png';
   import LogoLoginButton from '../../../../public/assets/media/icons/ayotaku/Icon MAL.svg';
   import Cookies from '../../utils/handler-cookies';
+  import Fetching from '../../utils/handler-fetching';
+  import { CLIENT_ID, CODE_CHALLENGE, RESPONSE_TYPE } from '../../utils/others/config.json';
 
   const router = useRouter();
   const getStateLogin = ref();
@@ -18,56 +20,54 @@
     if (code) {
       loadingButton.value = true;
 
-      const headersFetch = new Headers();
-      headersFetch.append("Content-Type", "application/json");
+      const responseCallback = await Fetching.handlerCallbackLogin(code);
 
-      const data = JSON.stringify({
-        "code": code,
-      });
-      const requestOption = {
-        method: 'POST',
-        headers: headersFetch,
-        body: data,
-        redirect: "follow",
-      };
+      if (responseCallback.status) {
+        if (responseCallback.status !== 'success') {
+          toast.promise((promise), {
+            loading: 'Loading...',
+            success: 'Ada suatu kesalahan terjadi!',
+            duration: 2000
+          });
+          return;
+        }
 
-      fetch('http://localhost:9001/api/admin/callback', requestOption)
-        .then((response) => response.json())
-        .then((result) => {
-          toast.promise(promise, {
+        if (responseCallback.status === 'success') {
+          toast.promise((promise), {
             loading: 'Loading...',
             success: 'Berhasil login dengan Myanimelist',
             duration: 2000
           });
 
-          Cookies.setCookies('tokenAyotaku', result.responseData?.tokenAyotaku);
-          Cookies.setCookies('tokenMAL', result.responseData?.token_mal);
+          Cookies.setCookies('tokenAyotaku', responseCallback.responseData?.tokenAyotaku);
+          Cookies.setCookies('tokenMAL', responseCallback.responseData?.token_mal);
 
           setTimeout(() => {
-            toast.promise(promise, {
+            toast.promise((promise), {
               loading: 'Please wait',
-              success: (data) => {
-                return 'Berhasil di redirect!'
-              },
+              success: 'Berhasil di redirect',
+              error: 'ERROR',
               duration: 3000
             })
+
             const parse = JSON.stringify({
-              id: result.responseData?.id_mal,
-              name: result.responseData?.name_mal,
+              id: responseCallback.responseData?.id_mal,
+              name: responseCallback.responseData?.name_mal,
             })
-            console.log(result.responseData);
-            localStorage.setItem('infoLogin', parse)
+
+            localStorage.setItem('infoLogin', parse);
             localStorage.setItem('stateLogin', 'true');
             getStateLogin.value = localStorage.getItem('stateLogin');
-            emit('stateLogin', getStateLogin.value)
+            emit('stateLogin', getStateLogin.value);
+
             router.push('/').then(() => {
               setTimeout(() => {
                 location.reload();
               }, 2000)
-            })
+            });
           }, 2500)
-        })
-        .catch((err) => console.error(err))
+        }
+      }
     }
   });
 
@@ -94,7 +94,12 @@
                         <div class="text-center"> <!-- Untuk mengatur agar konten berada di tengah -->
                           <img :src="LogoMyanimelist" alt="Logo Myanimelist" class="logo-myanime">
                           <div class="login">
-                            <a class="button-login" :class="{ 'disable-button-login': loadingButton }" href="https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=25d5416a5c1add91039197853644012d&code_challenge=1Ne8bk3L7BEw7Kr02-NxUuxqIOZjKJ61eDtZo03AD1Ptc9dXdOgpNXZeTUFhBllZJUlCJ8yEVv6TZaxEhxKUiVOJ2fwIq5JLAUug1TYP2LRIBkQ4o_VufaNL2uBAlKLF" @click="handlerClickButton">
+                            <a 
+                              class="button-login" 
+                              :class="{ 'disable-button-login': loadingButton }" 
+                              :href="`https://myanimelist.net/v1/oauth2/authorize?response_type=${RESPONSE_TYPE}&client_id=${CLIENT_ID}&code_challenge=${CODE_CHALLENGE}`"
+                              @click="handlerClickButton"
+                            >
                               <img :src="LogoLoginButton" alt="Icon Button Login" class="img-button-login rounded-circle"> Login
                             </a>
                           </div>
