@@ -54,11 +54,20 @@
           item.endValue = responseTotal?.data?.totalUser;
         }
 
+        if (item.id === 'count_up_anime') {
+          item.endValue = responseTotal?.data?.totalAnime;
+        }
+
+        if (item.id === 'count_up_episode') {
+          item.endValue = responseTotal?.data?.totalEpisode;
+        }
+
         if (item.id === 'count_up_online') {
           item.endValue = responseTotal?.data?.onlineUser;
         }
       })
 
+      // response untuk data logs
       const responseLogs = await Fetching.handlerFetchingLogs(tokenCookies);
       items.value = responseLogs?.data;
     }
@@ -86,6 +95,16 @@
       if (idSelected.id === 'count_up_user') {
         toastShow('User', idSelected.endValue, responseTotal?.data?.totalUser)
         idSelected.endValue = responseTotal?.data?.totalUser
+      }
+
+      if (idSelected.id == 'count_up_anime') {
+        toastShow('Anime', idSelected.endValue, responseTotal?.data?.totalAnime)
+        idSelected.endValue = responseTotal?.data?.totalAnime
+      }
+
+      if (idSelected.id == 'count_up_episode') {
+        toastShow('Episode', idSelected.endValue, responseTotal?.data?.totalEpisode)
+        idSelected.endValue = responseTotal?.data?.totalEpisode;
       }
       
       if (idSelected.id === 'count_up_online') {
