@@ -245,7 +245,7 @@
                       'badge-primary': props.rowData?.link_download?.resol720
                     }"
                   >
-                    Stream 720
+                    Download 720
                   </span>
 
                   <span 
@@ -255,7 +255,7 @@
                       'badge-primary': props.rowData?.link_download?.resol1080
                     }"
                   >
-                    Stream 1080
+                    Download 1080
                   </span>
                 </template>
 
