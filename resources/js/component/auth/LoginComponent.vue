@@ -39,33 +39,46 @@
             duration: 2000
           });
 
-          Cookies.setCookies('tokenAyotaku', responseCallback.responseData?.tokenAyotaku);
-          Cookies.setCookies('tokenMAL', responseCallback.responseData?.token_mal);
+          if (responseCallback.responseData?.role === 'admin') {
+            Cookies.setCookies('tokenAyotaku', responseCallback.responseData?.tokenAyotaku);
+            Cookies.setCookies('tokenMAL', responseCallback.responseData?.token_mal);
+  
+            setTimeout(() => {
+              toast.promise((promise), {
+                loading: 'Please wait',
+                success: 'Berhasil di redirect',
+                error: 'ERROR',
+                duration: 3000
+              })
+  
+              const parse = JSON.stringify({
+                id: responseCallback.responseData?.id_mal,
+                name: responseCallback.responseData?.name_mal,
+              })
+  
+              localStorage.setItem('infoLogin', parse);
+              localStorage.setItem('stateLogin', 'true');
+              getStateLogin.value = localStorage.getItem('stateLogin');
+              emit('stateLogin', getStateLogin.value);
+  
+              router.push('/').then(() => {
+                setTimeout(() => {
+                  location.reload();
+                }, 2000)
+              });
+            }, 2500)
+          }
 
-          setTimeout(() => {
-            toast.promise((promise), {
-              loading: 'Please wait',
-              success: 'Berhasil di redirect',
-              error: 'ERROR',
-              duration: 3000
-            })
-
-            const parse = JSON.stringify({
-              id: responseCallback.responseData?.id_mal,
-              name: responseCallback.responseData?.name_mal,
-            })
-
-            localStorage.setItem('infoLogin', parse);
-            localStorage.setItem('stateLogin', 'true');
-            getStateLogin.value = localStorage.getItem('stateLogin');
-            emit('stateLogin', getStateLogin.value);
-
+          if (responseCallback.responseData?.role !== 'admin') {
+            toast.error('Kamu bukan admin, minta ke developer untuk mengganti role kamu dan login ulang!');
             router.push('/').then(() => {
               setTimeout(() => {
                 location.reload();
               }, 2000)
             });
-          }, 2500)
+            return;
+          }
+
         }
       }
     }
