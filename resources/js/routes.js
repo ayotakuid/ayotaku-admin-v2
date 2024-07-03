@@ -4,6 +4,7 @@ import CreateAnimeComponent from './component/animes/CreateAnimeComponent.vue';
 import RecoveryAnimeComponent from './component/animes/RecoveryAnimeComponent.vue';
 import EpisodeIndexComponent from './component/animes/EpisodeIndexComponent.vue';
 import RecoveryEpisodeComponent from './component/animes/RecoveryEpisodeComponent.vue';
+import UserIndexComponent from './component/animes/UserIndexComponent.vue';
 
 const routes = [
   {
@@ -57,7 +58,15 @@ const routes = [
     meta: {
       requiresAuth: true
     }
-  }
+  },
+  {
+    path: '/users',
+    name: 'users-component',
+    component: UserIndexComponent,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 export default routes;
