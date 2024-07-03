@@ -215,6 +215,27 @@ const handlerFetchingShowAllAnime = async (token) => {
   }
 }
 
+const handlerFetchingShowAllUsers = async (token) => {
+  const headersUsers = new Headers();
+  headersUsers.append("Content-Type", "application/json");
+  headersUsers.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headersUsers,
+    redirect: 'follow',
+  };
+
+  try {
+    const fetchingUsers = await fetch(`${BASE_URL}/users`, requestOptions);
+    const resultUsers = await fetchingUsers.json();
+    return resultUsers;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   handlerCallbackLogin,
   checkingToken,
@@ -226,4 +247,5 @@ export default {
   handlerFetchingSearchAnime,
   handlerFetchingDetailAnime,
   handlerFetchingShowAllAnime,
+  handlerFetchingShowAllUsers
 };
