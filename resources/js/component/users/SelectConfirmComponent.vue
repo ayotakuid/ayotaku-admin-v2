@@ -53,13 +53,13 @@
     <button 
       class="btn btn-success btn-sm btn-icon my-2 mx-2"
     >
-      <i class="fa-solid fa-check"></i>
+      <i class="fa-solid fa-check fs-4"></i>
     </button>
     <button 
       class="btn btn-secondary btn-sm btn-icon my-2 mx-2"
       @click="handleCancel"
     >
-      <i class="fa-solid fa-xmark"></i>
+      <i class="fa-solid fa-xmark fs-4"></i>
     </button>
   </div>
 </template>
