@@ -5,6 +5,7 @@
   import DataTablesCore from 'datatables.net';
   import Fetching from '../../utils/handler-fetching';
   import Cookies from '../../utils/handler-cookies';
+  import SelectConfirmComponent from '../button/SelectConfirmComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -18,11 +19,14 @@
   const columns = [
     {
       data: 'uuid',
+      render: '#action',
       orderable: false,
-      width: '50px'
+      searchable: false,
+      width: '300px'
     },
     {
       data: 'img_profile',
+      render: '#imageProfile',
       orderable: false,
       width: '250px'
     },
@@ -35,7 +39,7 @@
       width: '200px'
     },
     {
-      data: 'isLogin',
+      data: 'timeLogin',
       width: '300px'
     },
     {
@@ -90,10 +94,28 @@
                   },
                 }"
               >
+                <!-- template untuk edit role -->
+                <template #action="props">
+                  <SelectConfirmComponent 
+                    :tempData="props.rowData"
+                  />
+                </template>
+
+                <!-- template untuk image profile -->
+                <template #imageProfile="props">
+                  <div class="text-center">
+                    <img 
+                      :src="props.rowData?.img_profile"
+                      class="rounded-circle"
+                      width="50%"
+                    />
+                  </div>
+                </template>
+
                 <thead>
                   <tr>
                     <th>Action</th>
-                    <th>Profile MAL</th>
+                    <th class="text-start">Profile MAL</th>
                     <th>Username MAL</th>
                     <th>Role</th>
                     <th>Is login & Time</th>
