@@ -5,7 +5,9 @@
   import DataTablesCore from 'datatables.net';
   import Fetching from '../../utils/handler-fetching';
   import Cookies from '../../utils/handler-cookies';
+  import FormatDate from '../../utils/handler-date';
   import SelectConfirmComponent from '../users/SelectConfirmComponent.vue';
+  import RoleUserComponent from '../users/RoleUserComponent.vue';
 
   DataTable.use(DataTablesCore);
 
@@ -36,14 +38,17 @@
     },
     {
       data: 'role',
+      render: '#role', 
       width: '200px'
     },
     {
       data: 'timeLogin',
+      render: '#infoLogin',
       width: '300px'
     },
     {
       data: 'created_at',
+      render: '#createdAt',
       width: '200px'
     }
   ];
@@ -110,6 +115,27 @@
                       width="50%"
                     />
                   </div>
+                </template>
+
+                <template #role="props">
+                  <RoleUserComponent 
+                    :propsData="props.rowData"
+                  />
+                </template>
+
+                <template #infoLogin="props">
+                  <div class="row">
+                    <div class="col-md-12">
+                      {{ props.rowData?.isLogin ? 'Lagi Login' : 'Lagi Tidak Login' }}
+                    </div>
+                    <div class="col-md-12">
+                      {{ FormatDate.formatDateOnline(props.rowData?.timeLogin) }}
+                    </div>
+                  </div>
+                </template>
+
+                <template #createdAt="props">
+                  {{ FormatDate.formatDateStart(props.rowData?.created_at) }}
                 </template>
 
                 <thead>
