@@ -5,7 +5,7 @@
   import DataTablesCore from 'datatables.net';
   import Fetching from '../../utils/handler-fetching';
   import Cookies from '../../utils/handler-cookies';
-  import SelectConfirmComponent from '../button/SelectConfirmComponent.vue';
+  import SelectConfirmComponent from '../users/SelectConfirmComponent.vue';
 
   DataTable.use(DataTablesCore);
 
