@@ -32,6 +32,9 @@
         <link rel="stylesheet" href="{{ asset('assets/plugins/global/css/select2.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}">
         <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+
+        {{-- INI CONFIG UNTUK PRODUCTION --}}
+        {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-8aNONUvS.css') }}"> --}}
       
         @vite(['resources/js/app.js'])
       </head>
@@ -47,6 +50,12 @@
         <div id="app"></div>
       </body>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+      {{-- INI CONFIG UNTUK PRODUCTION --}}
+      {{-- <script src="{{ asset('build/assets/app-D-hd7bqm.js') }}"></script>
+      <script src="{{ asset('build/assets/app-l0sNRNKZ.js') }}"></script> --}}
+
+
       <script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
