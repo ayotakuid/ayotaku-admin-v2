@@ -236,6 +236,31 @@ const handlerFetchingShowAllUsers = async (token) => {
   }
 }
 
+const handlerFetchingEditRoleUser = async (token, data) => {
+  const headerEditRole = new Headers();
+  headerEditRole.append("Content-Type", "application/json");
+  headerEditRole.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: headerEditRole,
+    body: JSON.stringify({
+      name_mal: data.name_mal,
+      role: data.role,
+    }),
+    redirect: 'follow',
+  };
+
+  try {
+    const fetchingEditRole = await fetch(`${BASE_URL}/users/role/update`, requestOptions);
+    const resultEditRole = await fetchingEditRole.json();
+    return resultEditRole;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export default {
   handlerCallbackLogin,
   checkingToken,
@@ -247,5 +272,6 @@ export default {
   handlerFetchingSearchAnime,
   handlerFetchingDetailAnime,
   handlerFetchingShowAllAnime,
-  handlerFetchingShowAllUsers
+  handlerFetchingShowAllUsers,
+  handlerFetchingEditRoleUser
 };
