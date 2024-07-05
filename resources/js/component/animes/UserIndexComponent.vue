@@ -54,6 +54,7 @@
   ];
 
   const dataDataTable = ref();
+  const dataAfterEditRole = ref();
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const emit = defineEmits(['parents']);
   emit('parents', data);
@@ -71,7 +72,28 @@
       toast.error('Gagal fetching data users');
       return;
     }
-  })
+  });
+
+  const handlerAfterEdit = (data) => {
+    dataAfterEditRole.value = {
+      name_mal: data.name_mal,
+      role: data.role
+    };
+    
+    const findData = dataDataTable.value;
+    const resultFindIndex = findData.findIndex((item) => item.name_mal === dataAfterEditRole.value.name_mal);
+    console.log(findData[resultFindIndex].role);
+
+    if (resultFindIndex !== -1) {
+      findData[resultFindIndex].role = dataAfterEditRole.value.role;
+      dataAfterEditRole.value = null
+    }
+
+    if (resultFindIndex === -1) {
+      toast.error('Ada error');
+      return;
+    }
+  }
 </script>
 
 <template>
@@ -103,6 +125,8 @@
                 <template #action="props">
                   <SelectConfirmComponent 
                     :tempData="props.rowData"
+                    :token="tokenAyotaku"
+                    @updateListData="handlerAfterEdit"
                   />
                 </template>
 
