@@ -1,5 +1,5 @@
 <script setup>
-  import { nextTick, onMounted, ref } from 'vue';
+  import { ref } from 'vue';
 
   const startDate = '2020';
   const nowDate = new Date().getFullYear();
@@ -14,7 +14,6 @@
     textTitle.value = dataChild.value[0]
     emit('parents', textTitle);
   }
-  
 </script>
 
 <template>

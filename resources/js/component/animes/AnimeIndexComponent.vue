@@ -123,16 +123,34 @@
 
   const dataAnime = ref(null);
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
+  const promise = () => new Promise((resolve) => setTimeout(resolve, 2000));
   const animeDelete = ref();
   const animeSync = ref();
   const animeEdit = ref();
   const animeAdd = ref();
+  const isAdmin = ref();
 
   watchEffect(async () => {
+    const responseProfile = await Fetching.handlerFetchingProfile(tokenAyotaku);
+
+    if (!responseProfile.status || responseProfile.status !== 'success' || responseProfile.data.role !== 'admin') {
+      toast.promise((promise), {
+        loading: 'Loading...',
+        success: () => {
+          isAdmin.value = false
+          location.reload()
+          return 'Tidak berhak disini!';
+        },
+        error: 'ERROR',
+      })
+      return;
+    }
+
     const fetchingShowAnime = await Fetching.handlerFetchingShowAllAnime(tokenAyotaku);
 
     if (fetchingShowAnime.status) {
       if (fetchingShowAnime.status === 'success') {
+        isAdmin.value = true;
         dataAnime.value = fetchingShowAnime?.data
       }
     }
@@ -227,7 +245,10 @@
       <div class="card-body">
         <div class="container">
           <div class="row">
-            <div class="col-md-12 my-2 d-flex justify-content-end">
+            <div 
+              class="col-md-12 my-2 d-flex justify-content-end"
+              v-if="isAdmin"
+            >
               <router-link 
                 to="/" 
                 class="btn btn-primary btn-sm btn-icon"
@@ -252,6 +273,7 @@
                 <i class="fa-solid fa-plus"></i>
               </router-link>
             </div>
+            <div v-else class="col-md-12 my-2 d-flex justify-content-end"></div>
 
             <div class="col-md-12 my-2">
               <DataTable

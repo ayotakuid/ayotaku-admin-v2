@@ -59,6 +59,14 @@
               stateInfo.value = responseProfile.data
             }, 2000)
           }
+
+          if (responseProfile.data.role !== 'admin') {
+            getStateLogin.value = false
+            localStorage.setItem('stateLogin', 'false')
+            localStorage.removeItem('infoLogin');
+            Cookies.deleteCookies('tokenAyotaku');
+            Cookies.deleteCookies('tokenMAL');
+          }
         }
       }
 

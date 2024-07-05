@@ -4,6 +4,7 @@
   import DataTable from 'datatables.net-vue3';
   import DataTablesCore from 'datatables.net';
   import FetchingEpisode from '../../utils/handler-episode-fetching';
+  import Fetching from '../../utils/handler-fetching';
   import Cookies from '../../utils/handler-cookies';
   import FormatDate from '../../utils/handler-date';
   import ModalShowEpisodeComponent from '../animes/modal/ModalShowEpisodeComponent.vue';
@@ -65,15 +66,33 @@
   const dataModalShow = ref();
   const episodeDelete = ref();
   const episodeEdit = ref();
+  const isAdmin = ref();
   const tokenAyotaku = Cookies.getCookies('tokenAyotaku');
   const emit = defineEmits(['parents'])
   emit('parents', data)
 
   watchEffect(async () => {
+    const responseProfile = await Fetching.handlerFetchingProfile(tokenAyotaku);
+
+    if (!responseProfile.status || responseProfile.status !== 'success' || responseProfile.data.role !== 'admin') {
+      toast.promise((promise), {
+        loading: 'Loading...',
+        success: () => {
+          isAdmin.value = false
+          location.reload()
+          return 'Tidak berhak disini!';
+        },
+        error: 'ERROR',
+      })
+      return;
+    }
+
+
     const fetchingEpisodeAnime = await FetchingEpisode.showAllEpisode(tokenAyotaku);
 
     if (fetchingEpisodeAnime.status) {
       if (fetchingEpisodeAnime.status === 'success') {
+        isAdmin.value = true;
         dataDataTable.value = fetchingEpisodeAnime?.data
       }
 
@@ -130,7 +149,10 @@
       <div class="card-body">
         <div class="container">
           <div class="row">
-            <div class="col-md-12 my-2 d-flex justify-content-end">
+            <div 
+              class="col-md-12 my-2 d-flex justify-content-end"
+              v-if="isAdmin"
+            >
               <router-link 
                 to="/anime" 
                 class="btn btn-primary btn-sm btn-icon"
@@ -147,6 +169,7 @@
                 <i class="fa-solid fa-rotate-left"></i>
               </router-link>
             </div>
+            <div v-else class="col-md-12 my-2 d-flex justify-content-end"></div>
 
             <div class="col-md-12 my-2">
               <DataTable
