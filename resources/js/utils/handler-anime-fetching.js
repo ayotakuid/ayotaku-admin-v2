@@ -144,11 +144,63 @@ const manualEditAnime = async (token, data) => {
   }
 }
 
+const fetchingSearchAnime = async (token, anime) => {
+  const headerSearchAnime = new Headers();
+  headerSearchAnime.append("Content-Type", "application/json");
+  headerSearchAnime.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headerSearchAnime,
+    redirect: 'follow',
+  }
+
+  try {
+    const responseSearchAnime = await fetch(`${BASE_URL}/anime/searchAnime?nama_anime=${anime}`, requestOptions);
+    const result = await responseSearchAnime.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+const fetchingSaveRecommend = async (token, dataRecommend) => {
+  const headerSaveRecommend = new Headers();
+  headerSaveRecommend.append("Content-Type", "application/json");
+  headerSaveRecommend.append("Authorization", `Bearer ${token}`);
+  
+  const raw = JSON.stringify({
+    "id_anime": dataRecommend?.id_anime_db,
+    "slug_anime": dataRecommend?.slug_anime,
+    "default_img": dataRecommend?.default_img,
+    "edit_img": dataRecommend?.edit_img
+  });
+  
+  const requestOptions = {
+    method: "POST",
+    headers: headerSaveRecommend,
+    body: raw,
+    redirect: "follow"
+  };
+
+  try {
+    const responseSaveRecommend = await fetch(`${BASE_URL}/anime/recommend`, requestOptions);
+    const result = await responseSaveRecommend.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createAnime,
   softDeleteAnime,
   showDeleteAnime,
   recoveryAnime,
   syncAnimeById,
-  manualEditAnime
+  manualEditAnime,
+  fetchingSearchAnime,
+  fetchingSaveRecommend
 }

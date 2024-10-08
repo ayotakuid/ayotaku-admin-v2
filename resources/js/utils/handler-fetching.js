@@ -261,6 +261,26 @@ const handlerFetchingEditRoleUser = async (token, data) => {
   }
 };
 
+const handlerFetchingJikanPictureAnime = async (idAnime) => {
+  const headersJikanPictureAnime = new Headers();
+  headersJikanPictureAnime.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headersJikanPictureAnime,
+    redirect: 'follow',
+  };
+
+  try {
+    const responseJikanPicture = await fetch(`https://api.jikan.moe/v4/anime/${idAnime}/pictures`, requestOptions);
+    const result = await responseJikanPicture.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   handlerCallbackLogin,
   checkingToken,
@@ -273,5 +293,6 @@ export default {
   handlerFetchingDetailAnime,
   handlerFetchingShowAllAnime,
   handlerFetchingShowAllUsers,
-  handlerFetchingEditRoleUser
+  handlerFetchingEditRoleUser,
+  handlerFetchingJikanPictureAnime
 };
