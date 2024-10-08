@@ -5,6 +5,8 @@ import RecoveryAnimeComponent from './component/animes/RecoveryAnimeComponent.vu
 import EpisodeIndexComponent from './component/animes/EpisodeIndexComponent.vue';
 import RecoveryEpisodeComponent from './component/animes/RecoveryEpisodeComponent.vue';
 import UserIndexComponent from './component/animes/UserIndexComponent.vue';
+import RecommendAnimeCompoent from './component/animes/RecommendAnimeCompoent.vue';
+import CreateRecommendComponent from './component/animes/CreateRecommendComponent.vue';
 
 const routes = [
   {
@@ -63,6 +65,22 @@ const routes = [
     path: '/users',
     name: 'users-component',
     component: UserIndexComponent,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/recommend',
+    name: 'recommend-component',
+    component: RecommendAnimeCompoent,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/recommend/add',
+    name: 'create-recommend-component',
+    component: CreateRecommendComponent,
     meta: {
       requiresAuth: true,
     },
