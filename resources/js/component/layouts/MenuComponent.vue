@@ -90,6 +90,19 @@ import { ref, watch } from 'vue';
               <!--end:Menu link-->
 
             <!--begin:Menu link-->
+            <router-link to="/recommend" class="menu-link" :class="{ 'active': active?.name === 'recommend-page' }">
+              <span class="menu-icon">
+                <!--begin::Svg Icon | path: icons/duotune/abstract/abs014.svg-->
+                <span class="svg-icon svg-icon-2">
+                  <i class="fa-solid fa-gear"></i>
+                </span>
+                <!--end::Svg Icon-->
+              </span>
+              <span class="menu-title">Recommend Anime</span>
+            </router-link>
+            <!--end:Menu link-->
+
+            <!--begin:Menu link-->
             <router-link to="/users" class="menu-link" :class="{ 'active': active?.name === 'users-page' }">
               <span class="menu-icon">
                 <!--begin::Svg Icon | path: icons/duotune/abstract/abs014.svg-->
