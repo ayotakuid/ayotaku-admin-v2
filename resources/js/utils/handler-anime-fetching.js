@@ -194,6 +194,76 @@ const fetchingSaveRecommend = async (token, dataRecommend) => {
   }
 }
 
+const fetchingShowRecommendAnime = async (token) => {
+  const headersShowRecommend = new Headers();
+  headersShowRecommend.append("Content-Type", "application/json");
+  headersShowRecommend.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headersShowRecommend,
+    redirect: 'follow',
+  };
+
+  try {
+    const responseShowRecommend = await fetch(`${BASE_URL}/anime/recommend`, requestOptions);
+    const result = await responseShowRecommend.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+const fetchingDeleteRecommendAnime = async (token, idAnime) => {
+  const headersDeleteRecommend = new Headers();
+  headersDeleteRecommend.append("Content-Type", "application/json");
+  headersDeleteRecommend.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'DELETE',
+    headers: headersDeleteRecommend,
+    body: JSON.stringify({
+      id_anime: idAnime,
+    }),
+    redirect: 'follow',
+  };
+
+  try {
+    const responseDelete = await fetch(`${BASE_URL}/anime/recommend`, requestOptions);
+    const result = await responseDelete.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+const fetchingUpdateRecommendAnime = async (token, dataUpdate) => {
+  const headersUpdateRecommend = new Headers();
+  headersUpdateRecommend.append("Content-Type", "application/json");
+  headersUpdateRecommend.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'PUT',
+    headers: headersUpdateRecommend,
+    body: JSON.stringify({
+      recommendUuid: dataUpdate?.uuid,
+      imageURL: dataUpdate?.image,
+    }),
+    redirect: 'follow',
+  };
+
+  try {
+    const responseEdit = await fetch(`${BASE_URL}/anime/recommend`, requestOptions);
+    const result = await responseEdit.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export default {
   createAnime,
   softDeleteAnime,
@@ -202,5 +272,8 @@ export default {
   syncAnimeById,
   manualEditAnime,
   fetchingSearchAnime,
-  fetchingSaveRecommend
+  fetchingSaveRecommend,
+  fetchingShowRecommendAnime,
+  fetchingDeleteRecommendAnime,
+  fetchingUpdateRecommendAnime,
 }

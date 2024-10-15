@@ -121,27 +121,27 @@
               </div>
               <div 
                 v-for="image in imageList"
-                :key="image.webp.image_url"
+                :key="image.jpg.large_image_url"
                 class="col-md-3 mt-2"
               >
                 <div>
                   <h3 
                     class="fw-bold text-trailer"
-                    @click="handlerClickSelectedPicture(image.webp.image_url)"
+                    @click="handlerClickSelectedPicture(image.jpg.large_image_url)"
                   >
                     <input 
                       type="radio"
-                      :value="image.webp.image_url"
+                      :value="image.jpg.large_image_url"
                       v-model="pictureJikan.urlPicture"
                     >
                   </h3>
                 </div>
                 <img 
-                  :src="image.webp.image_url" 
-                  :alt="image.webp.image_url"
+                  :src="image.jpg.large_image_url" 
+                  :alt="image.jpg.large_image_url"
                   width="150px" 
                   class="rounded img-trailer"
-                  @click="handlerClickSelectedPicture(image.webp.image_url)"
+                  @click="handlerClickSelectedPicture(image.jpg.large_image_url)"
                   referrerPolicy="no-referrer"
                 >
               </div>
