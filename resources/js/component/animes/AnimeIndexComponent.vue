@@ -276,6 +276,9 @@
             <div v-else class="col-md-12 my-2 d-flex justify-content-end"></div>
 
             <div class="col-md-12 my-2">
+              <p class="fs-8 text-danger fw-bolder">
+                Note: Tekan <code>Shift</code> + <code>Scroll Up/Down</code> pada table untuk Scroll ke samping
+              </p>
               <DataTable
                 :columns="columns"
                 :data="dataAnime"
@@ -425,6 +428,12 @@
   </div>
 </template>
 
+<style lang="css" scoped>
+  code {
+    background-color: #2f303e;
+    color: #ffffff;
+  }
+</style>
 <style>
 /* Custom styles for DataTables pagination */
 
